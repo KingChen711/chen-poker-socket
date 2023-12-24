@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import { useRoom } from '@/hooks/useRoom'
 import { startGame } from '@/lib/actions/game'
-import { leaveRoom } from '@/lib/actions/room'
+import { leaveRoom } from '@/lib/_actions/room'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 type Props = {
   params: {
@@ -19,14 +20,15 @@ type Props = {
 
 function RoomDetailPage({ params }: Props) {
   const router = useRouter()
-  const { room, players, playingPerson, pot, currentUser, winner, isLoading } = useRoom(params.id)
+  // const { room, players, playingPerson, pot, currentUser, winner, isLoading } = useRoom(params.id)
   const [isLeavingRoom, setIsLeavingRoom] = useState(false)
+  const currentUser = useCurrentUser()
 
   const handleLeaveRoom = useCallback(async () => {
     setIsLeavingRoom(true)
     try {
       if (currentUser) {
-        await leaveRoom({ userId: currentUser.userId })
+        await leaveRoom({ clerkId: currentUser.clerkId })
         router.push('/')
       }
     } catch (error) {
@@ -52,71 +54,35 @@ function RoomDetailPage({ params }: Props) {
     }
   }
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (!currentUser) {
-        return
-      }
-      // Gửi dữ liệu bất đồng bộ sử dụng navigator.sendBeacon()
-      const data = {
-        userId: currentUser.userId
-      }
-
-      const endpoint = '/api/cleanup'
-      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
-
-      // Kiểm tra nếu navigator.sendBeacon() được hỗ trợ
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(endpoint, blob)
-      } else {
-        // Nếu không hỗ trợ, có thể sử dụng XMLHttpRequest hoặc fetch thông thường
-        fetch(endpoint, {
-          method: 'POST',
-          body: blob,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-      }
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      // Loại bỏ sự kiện khi component bị unmount
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [currentUser])
-
-  if (!room) {
-    if (isLoading) {
-      return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Is loading</div>
-    } else {
-      return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Not found the room</div>
-    }
-  }
+  // if (!room) {
+  //   if (isLoading) {
+  //     return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Is loading</div>
+  //   } else {
+  //     return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Not found the room</div>
+  //   }
+  // }
 
   return (
     <div className='mx-auto flex min-h-screen flex-col pt-24'>
       <div className='fixed inset-0 -z-50 bg-[url("/assets/images/bg-room.jpeg")] bg-cover bg-no-repeat' />
       <div className='mt-2 flex justify-between gap-6'>
         <div>
-          <div className='text-lg font-medium'>Mã phòng: {room.roomCode}</div>
+          <div className='text-lg font-medium'>Mã phòng: xxxx</div>
         </div>
 
         <div className='flex gap-3'>
-          {room.roomOwner === currentUser?.userId && room.status === 'pre-game' && (
+          {/* {room.roomOwner === currentUser?.userId && room.status === 'PRE_GAME' && (
             <Button onClick={handleStartGame}>Bắt đầu {isLeavingRoom && <Loader />}</Button>
-          )}
-          {room.status === 'pre-game' && (
-            <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
-              Rời phòng {isLeavingRoom && <Loader />}
-            </Button>
-          )}
+          )} */}
+          {/* {room.status === 'PRE_GAME' && ( */}
+          <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
+            Rời phòng {isLeavingRoom && <Loader />}
+          </Button>
+          {/* )} */}
         </div>
       </div>
 
-      {room.status === 'pre-game' ? (
+      {/* {room.status === 'PRE_GAME' ? (
         <div className='mt-4 flex flex-wrap gap-8'>
           {players.map((p) => {
             if (!p.user) return null
@@ -140,7 +106,8 @@ function RoomDetailPage({ params }: Props) {
           pot={pot}
           winner={winner}
         />
-      )}
+        <></>
+      )} */}
     </div>
   )
 }

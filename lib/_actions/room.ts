@@ -1,42 +1,28 @@
-// import { CreateRoomParams } from '../params'
+import { Room } from '@/types'
+import { CreateRoomParams, LeaveRoomParams } from '../params'
 
-// export async function createRoom({ userId }: CreateRoomParams) {
-//   const user = await getUserById(userId)
+export async function createRoom({ clerkId }: CreateRoomParams) {
+  const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      clerkId
+    })
+  }).then((response) => response.json())
 
-//   if (!user) {
-//     throw new Error('Not found user!')
-//   }
+  return data.room as Room
+}
 
-//   if (user.currentRoom) {
-//     throw new Error('You are already in a room!')
-//   }
-
-// const newRoom: Omit<Room, 'id'> = {
-//   roomCode: generateRoomCode(),
-//   status: 'pre-game',
-//   roomOwner: userId,
-//   players: [
-//     {
-//       userId: user.id,
-//       balance: BalanceValue,
-//       bet: 0,
-//       hand: {
-//         holeCards: [],
-//         pokerCards: [],
-//         rank: null
-//       },
-//       user: null
-//     }
-//   ],
-//   gameObj: null
-// }
-
-// const roomId = await addData({
-//   collectionName: 'rooms',
-//   data: newRoom
-// })
-
-// await updateUser({ ...user, currentRoom: roomId })
-
-// return { roomId }
-// }
+export async function leaveRoom({ clerkId }: LeaveRoomParams) {
+  await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms/leave`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      clerkId
+    })
+  })
+}

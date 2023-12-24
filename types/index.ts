@@ -48,7 +48,7 @@ export type User = {
   username: string
   name: string
   createdAt: string
-  currentRoom: string | null
+  currentRoomId: string | null
 }
 
 export type Hand = { holeCards: Card[]; rank: Rank | null; pokerCards: Card[] }
@@ -86,10 +86,10 @@ export type Room = {
 } & (
   | {
       gameObj: GameObj
-      status: 'pre-flop' | 'the-flop' | 'the-turn' | 'the-river' | 'showdown'
+      status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER' | 'SHOWDOWN'
     }
   | {
       gameObj: null
-      status: 'pre-game'
+      status: 'PRE_GAME'
     }
 )

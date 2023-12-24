@@ -9,7 +9,7 @@ import PlayerBox from './PlayerBox'
 import BetButtons from './BetButtons'
 
 type Props = {
-  room: Room & { status: 'pre-flop' | 'the-flop' | 'the-turn' | 'the-river' | 'showdown' }
+  room: Room & { status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER' | 'SHOWDOWN' }
   players: Player[]
   playingPerson: string | null
   pot: number

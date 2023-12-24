@@ -1,4 +1,4 @@
-import { getUserByClerkId } from '@/lib/actions/user'
+import { getUserByClerkId } from '@/lib/_actions/user'
 import { User } from '@/types'
 import { useAuth } from '@clerk/nextjs'
 import { useEffect, useState } from 'react'
@@ -16,7 +16,11 @@ export function useCurrentUser() {
       setUser(user || null)
     }
 
-    fetchUser()
+    try {
+      fetchUser()
+    } catch (error) {
+      setUser(null)
+    }
   }, [clerkId])
 
   return user

@@ -4,28 +4,31 @@ import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { toast } from '../ui/use-toast'
-import { createRoom, getCurrentRoom, joinRoom } from '@/lib/actions/room'
+import { createRoom } from '@/lib/_actions/room'
 import { useRouter } from 'next/navigation'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
 import Image from 'next/image'
+import { useAuth } from '@clerk/nextjs'
 
 function HomeButtons() {
   const router = useRouter()
   const [roomCode, setRoomCode] = useState('')
   const user = useCurrentUser()
+  const { userId: clerkId } = useAuth()
 
   const handleCreateNewRoom = async () => {
-    if (!user) {
+    if (!clerkId) {
       return
     }
+
     try {
-      const response = await createRoom({ userId: user.id })
-      router.push(`/rooms/${response?.roomId}`)
+      const room = await createRoom({ clerkId })
+      router.push(`/rooms/${room.id}`)
     } catch (error) {
       console.log(error)
 
       // @ts-ignore
-      if (error.message === 'You are already in a room!') {
+      if (error?.message === 'You are already in a room!') {
         toast({
           variant: 'destructive',
           title: 'Bạn đang ở trong một phòng khác!',
@@ -35,41 +38,41 @@ function HomeButtons() {
     }
   }
 
-  const handleJoinRoom = async () => {
-    if (!user || !roomCode) {
-      return
-    }
+  // const handleJoinRoom = async () => {
+  //   if (!user || !roomCode) {
+  //     return
+  //   }
 
-    try {
-      const roomId = await joinRoom({ roomCode, userId: user.id })
-      router.push(`/rooms/${roomId}`)
-    } catch (error) {
-      // @ts-ignore
-      if (error.message === 'Not found your current room!') {
-        toast({
-          variant: 'destructive',
-          title: 'Không tìm thấy phòng hiện tại của bạn!',
-          description: 'Hãy tham gia hoặc tạo phòng mới'
-        })
-      }
-      // @ts-ignore
-      if (error.message === 'You are already in a room!') {
-        toast({
-          variant: 'destructive',
-          title: 'Bạn đang ở trong một phòng khác!',
-          description: 'Hãy vào phòng hiện tại đó, và rời khỏi phòng nếu bạn muốn tạo phòng mới'
-        })
-      }
-      // @ts-ignore
-      if (error.message === 'Not found room!') {
-        toast({
-          variant: 'destructive',
-          title: 'Không tìm thấy phòng!',
-          description: 'Hãy kiểm tra lại mã phòng của bạn'
-        })
-      }
-    }
-  }
+  //   try {
+  //     const roomId = await joinRoom({ roomCode, userId: user.id })
+  //     router.push(`/rooms/${roomId}`)
+  //   } catch (error) {
+  //     // @ts-ignore
+  //     if (error.message === 'Not found your current room!') {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Không tìm thấy phòng hiện tại của bạn!',
+  //         description: 'Hãy tham gia hoặc tạo phòng mới'
+  //       })
+  //     }
+  //     // @ts-ignore
+  //     if (error.message === 'You are already in a room!') {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Bạn đang ở trong một phòng khác!',
+  //         description: 'Hãy vào phòng hiện tại đó, và rời khỏi phòng nếu bạn muốn tạo phòng mới'
+  //       })
+  //     }
+  //     // @ts-ignore
+  //     if (error.message === 'Not found room!') {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Không tìm thấy phòng!',
+  //         description: 'Hãy kiểm tra lại mã phòng của bạn'
+  //       })
+  //     }
+  //   }
+  // }
   return (
     <div className='mb-4 flex flex-wrap gap-4'>
       <Button size='lg' onClick={handleCreateNewRoom}>
@@ -87,7 +90,7 @@ function HomeButtons() {
             placeholder='Enter room code here...'
           />
         </div>
-        <Button className='text-base' onClick={handleJoinRoom} disabled={!roomCode} variant='link'>
+        <Button className='text-base' disabled={!roomCode} variant='link'>
           Join
         </Button>
       </div>

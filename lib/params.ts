@@ -1,5 +1,5 @@
 export type CreateRoomParams = {
-  userId: string
+  clerkId: string
 }
 
 export type GetCurrentRoomParams = {
@@ -7,7 +7,7 @@ export type GetCurrentRoomParams = {
 }
 
 export type LeaveRoomParams = {
-  userId: string
+  clerkId: string
 }
 
 export type JoinRoomParams = {

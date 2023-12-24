@@ -9,7 +9,7 @@ import {
   ShowDownFoldParams,
   StartGameParams
 } from '../params'
-import { getRoomById, leaveRoom } from './room'
+import { getRoomById } from './room'
 import { getUserById } from './user'
 import { BalanceValue, BigBlindValue, SmallBlindValue, deck } from '@/constants/deck'
 import { drawCard } from '../utils'
@@ -30,7 +30,7 @@ export async function startGame({ roomId }: StartGameParams) {
     throw new Error('At least 2 players to start a game!')
   }
 
-  room.status = 'pre-flop'
+  room.status = 'PRE_FLOP'
   const gameObj = {
     dealerIndex: 0,
     turn: 3, // turn of the player next to the big house
@@ -84,15 +84,15 @@ export function nextPlayerIndex(room: Room) {
 }
 
 export async function toNextRound(room: Room) {
-  if (room.status === 'pre-flop') {
-    return await toTheFlop({ roomId: room.id })
+  if (room.status === 'PRE_FLOP') {
+    return await toTHE_FLOP({ roomId: room.id })
   }
 
-  if (room.status === 'the-flop' || room.status === 'the-turn') {
-    return await toTheTurnOrTheRiver({ roomId: room.id })
+  if (room.status === 'THE_FLOP' || room.status === 'THE_TURN') {
+    return await toTHE_TURNOrTHE_RIVER({ roomId: room.id })
   }
 
-  if (room.status === 'the-river') {
+  if (room.status === 'THE_RIVER') {
     return await toShowDown({ roomId: room.id })
   }
 }
@@ -274,7 +274,7 @@ export async function allInBet({ roomId, userId }: AllInBetParams) {
   await toNextRound(room)
 }
 
-export async function toTheFlop({ roomId }: { roomId: string }) {
+export async function toTHE_FLOP({ roomId }: { roomId: string }) {
   const room = await getRoomById(roomId)
 
   if (!room) {
@@ -291,12 +291,12 @@ export async function toTheFlop({ roomId }: { roomId: string }) {
   gameObj.turn = nextPlayerIndex(room) // small blind is the first player of round
 
   gameObj.checkingPlayers = []
-  room.status = 'the-flop'
+  room.status = 'THE_FLOP'
   gameObj.communityCards = drawCard(gameObj.deck, 3)
   await updateData({ collectionName: 'rooms', data: room })
 }
 
-export async function toTheTurnOrTheRiver({ roomId }: { roomId: string }) {
+export async function toTHE_TURNOrTHE_RIVER({ roomId }: { roomId: string }) {
   const room = await getRoomById(roomId)
 
   if (!room) {
@@ -309,10 +309,10 @@ export async function toTheTurnOrTheRiver({ roomId }: { roomId: string }) {
     throw new Error('Not found game object')
   }
 
-  if (room.status === 'the-flop') {
-    room.status = 'the-turn'
-  } else if (room.status === 'the-turn') {
-    room.status = 'the-river'
+  if (room.status === 'THE_FLOP') {
+    room.status = 'THE_TURN'
+  } else if (room.status === 'THE_TURN') {
+    room.status = 'THE_RIVER'
   } else {
     throw new Error('Something went wrong!')
   }
@@ -338,7 +338,7 @@ export async function toShowDown({ roomId }: { roomId: string }) {
   }
 
   let pot = 0
-  room.status = 'showdown'
+  room.status = 'SHOWDOWN'
   room.players = room.players.map((p) => {
     p.hand = assignRankHand(p.hand, gameObj.communityCards)
     if (gameObj.foldPlayers.includes(p.userId)) {
@@ -380,7 +380,7 @@ export async function showDownFold({ roomId, lastFoldPlayer }: ShowDownFoldParam
   gameObj.communityCards = [...gameObj.communityCards, ...drawCard(gameObj.deck, amountNeedDrawMore)]
 
   let pot = 0
-  room.status = 'showdown'
+  room.status = 'SHOWDOWN'
   room.players = room.players.map((p) => {
     if (p.userId !== gameObj.winner) {
       p.hand.rank = Rank.Fold
@@ -436,7 +436,7 @@ export async function toNextMatch({ roomId }: { roomId: string }) {
     throw new Error('Not found game object')
   }
 
-  room.status = 'pre-flop'
+  room.status = 'PRE_FLOP'
 
   const dealerIndex = gameObj.dealerIndex + 1
   const numberOfPlayers = room.players.length
@@ -461,7 +461,7 @@ export async function toNextMatch({ roomId }: { roomId: string }) {
     const updateQuery: Promise<void>[] = []
     querySnapshot.forEach((doc) => {
       const player = { ...doc.data(), id: doc.id } as User
-      player.currentRoom = null
+      player.currentRoomId = null
       updateQuery.push(updateData({ collectionName: 'users', data: player }))
     })
     await Promise.all(updateQuery)
@@ -493,13 +493,13 @@ export async function cleanUpInGameRoom({ roomId, userId }: CleanUpInGameRoomPar
     throw new Error('Not found room!')
   }
 
-  if (room.status === 'pre-game') {
+  if (room.status === 'PRE_GAME') {
     return
   }
 
   if (room.players.length === 1) {
     // let's the last players leave the room
-    return await leaveRoom({ userId: room.players[0].userId })
+    // return await leaveRoom({ userId: room.players[0].userId })
   }
 
   room.gameObj.turn = room.gameObj.turn % room.players.length
@@ -533,13 +533,13 @@ export async function cleanUpInGameRoom({ roomId, userId }: CleanUpInGameRoomPar
   const isAllUserDone =
     room.gameObj.checkingPlayers.length + room.gameObj.foldPlayers.length + room.gameObj.allInPlayers.length ===
     room.players?.length
-  const isShowdownStage = room.status === 'showdown'
+  const isSHOWDOWNStage = room.status === 'SHOWDOWN'
 
-  if (!playerWhoNeedToCall && isAllUserDone && !isShowdownStage) {
+  if (!playerWhoNeedToCall && isAllUserDone && !isSHOWDOWNStage) {
     return await toNextRound(room)
   }
 
-  if (isShowdownStage && room.gameObj.readyPlayers.length === room.players.length) {
+  if (isSHOWDOWNStage && room.gameObj.readyPlayers.length === room.players.length) {
     return await toNextMatch({ roomId: room.id })
   }
 }
