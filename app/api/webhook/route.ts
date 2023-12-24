@@ -60,13 +60,19 @@ export async function POST(req: Request) {
   if (eventType === 'user.created') {
     const { id, email_addresses, image_url, username, first_name, last_name } = evt.data
 
-    const { data } = await chenPokerApi.post('/api/users', {
-      clerkId: id,
-      email: email_addresses[0].email_address,
-      name: `${first_name}${last_name ? ` ${last_name}` : ''}`,
-      picture: image_url,
-      username: username!
-    })
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        clerkId: id,
+        email: email_addresses[0].email_address,
+        name: `${first_name}${last_name ? ` ${last_name}` : ''}`,
+        picture: image_url,
+        username: username!
+      })
+    }).then((response) => response.json())
 
     return NextResponse.json({ message: 'ok', user: data.user })
   }
@@ -74,12 +80,18 @@ export async function POST(req: Request) {
   if (eventType === 'user.updated') {
     const { id: clerkId, email_addresses, image_url, username, first_name, last_name } = evt.data
 
-    const { data } = await chenPokerApi.put(`/api/users/${clerkId}`, {
-      email: email_addresses[0].email_address,
-      name: `${first_name}${last_name ? ` ${last_name}` : ''}`,
-      picture: image_url,
-      username: username!
-    })
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${clerkId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email_addresses[0].email_address,
+        name: `${first_name}${last_name ? ` ${last_name}` : ''}`,
+        picture: image_url,
+        username: username!
+      })
+    }).then((response) => response.json())
 
     return NextResponse.json({ message: 'ok', user: data.user })
   }
@@ -87,7 +99,12 @@ export async function POST(req: Request) {
   if (eventType === 'user.deleted') {
     const { id: clerkId } = evt.data
 
-    const { data } = await chenPokerApi.delete(`/api/users/${clerkId}`)
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${clerkId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => response.json())
 
     return NextResponse.json({ message: 'ok', user: data.user })
   }
