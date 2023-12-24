@@ -1,0 +1,53 @@
+{
+  "name": "poker-chen",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prettier": "prettier --check \"**/(*.tsx|*.ts|*.css|*.scss)\"",
+    "prettier:fix": "prettier --write \"**/(*.tsx|*.ts|*.css|*.scss)\""
+  },
+  "dependencies": {
+    "@clerk/localizations": "^1.26.10",
+    "@clerk/nextjs": "^4.27.2",
+    "@clerk/themes": "^1.7.9",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@tailwindcss/typography": "^0.5.10",
+    "axios": "^1.6.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-tailwindcss": "^3.13.0",
+    "firebase": "^10.7.0",
+    "lucide-react": "^0.294.0",
+    "next": "14.0.3",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2",
+    "svix": "^1.14.0",
+    "tailwind-merge": "^2.0.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "^14.0.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "postcss": "latest",
+    "prettier": "^3.1.0",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}

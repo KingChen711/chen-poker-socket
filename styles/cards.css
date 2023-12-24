@@ -1,0 +1,315 @@
+.bg-ace_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -10px;
+}
+
+.bg-2_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -10px;
+}
+
+.bg-3_clubs {
+  background: url('/assets/images/css_sprites.png') -250px -10px;
+}
+
+.bg-4_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -170px;
+}
+
+.bg-5_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -170px;
+}
+
+.bg-7_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -250px -170px;
+}
+
+.bg-6_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -10px;
+}
+
+.bg-8_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -170px;
+}
+
+.bg-9_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -330px;
+}
+
+.bg-ace_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -330px;
+}
+
+.bg-10_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -250px -330px;
+}
+
+.bg-2_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -330px;
+}
+
+.bg-king_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -10px;
+}
+
+.bg-jack_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -170px;
+}
+
+.bg-queen_clubs {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -330px;
+}
+
+.bg-4_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -10px;
+}
+
+.bg-5_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -170px;
+}
+
+.bg-6_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -330px;
+}
+
+.bg-2_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -490px;
+}
+
+.bg-7_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -490px;
+}
+
+.bg-8_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -250px -490px;
+}
+
+.bg-3_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -490px;
+}
+
+.bg-10_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -490px;
+}
+
+.bg-ace_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -490px;
+}
+
+.bg-jack_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -10px;
+}
+
+.bg-king_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -170px;
+}
+
+.bg-9_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -330px;
+}
+
+.bg-queen_diamonds {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -490px;
+}
+
+.bg-3_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -650px;
+}
+
+.bg-4_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -650px;
+}
+
+.bg-5_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -250px -650px;
+}
+
+.bg-6_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -650px;
+}
+
+.bg-9_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -650px;
+}
+
+.bg-8_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -650px;
+}
+
+.bg-7_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -650px;
+}
+
+.bg-10_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -10px;
+}
+
+.bg-ace_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -170px;
+}
+
+.bg-jack_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -330px;
+}
+
+.bg-king_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -490px;
+}
+
+.bg-queen_spades {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -650px;
+}
+
+.bg-2_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -10px -810px;
+}
+
+.bg-3_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -130px -810px;
+}
+
+.bg-4_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -250px -810px;
+}
+
+.bg-5_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -370px -810px;
+}
+
+.bg-6_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -490px -810px;
+}
+
+.bg-7_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -610px -810px;
+}
+
+.bg-8_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -730px -810px;
+}
+
+.bg-9_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -850px -810px;
+}
+
+.bg-10_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -970px -10px;
+}
+
+.bg-jack_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -970px -170px;
+}
+
+.bg-king_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -970px -330px;
+}
+
+.bg-queen_hearts {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -970px -490px;
+}
+
+.bg-back_card {
+  width: 100px;
+  height: 140px;
+  background: url('/assets/images/css_sprites.png') -970px -650px;
+}
