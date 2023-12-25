@@ -26,7 +26,7 @@ export function useGame(roomId: string) {
       return p.userId === user?.id
     })
     setCurrentPlayer(currentPlayer || null)
-  }, [room, user])
+  }, [user, players])
 
   // useEffect(() => {
   //   if (!room || room.status === 'PRE_GAME') {
@@ -59,7 +59,7 @@ export function useGame(roomId: string) {
 
   useEffect(() => {
     fetchGame()
-  }, [roomId])
+  }, [fetchGame])
 
   useEffect(() => {
     const onRoomChange = (room: Room) => {

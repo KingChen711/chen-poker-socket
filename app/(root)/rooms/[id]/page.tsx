@@ -3,7 +3,7 @@
 import Loader from '@/components/shared/Loader'
 import { Button } from '@/components/ui/button'
 // import { startGame } from '@/lib/actions/game'
-import { leaveRoom } from '@/lib/_actions/room'
+import { leaveRoom, startGame } from '@/lib/_actions/room'
 import Image from 'next/image'
 import { notFound, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
@@ -14,6 +14,7 @@ import { useAuth } from '@clerk/nextjs'
 import { useGame } from '@/hooks/useGame'
 import Link from 'next/link'
 import NoResult from '@/components/shared/NoResult'
+import PreGamePlayers from '@/components/room/PreGamePlayers'
 
 type Props = {
   params: {
@@ -24,7 +25,7 @@ type Props = {
 function RoomDetailPage({ params }: Props) {
   const roomId = params.id
   const router = useRouter()
-  const { room, players, playingPerson, pot, currentPlayer, winner, isLoading } = useGame(roomId)
+  const { room, currentPlayer, isLoading } = useGame(roomId)
   const [isLeavingRoom, setIsLeavingRoom] = useState(false)
   const { toast } = useToast()
 
@@ -42,38 +43,21 @@ function RoomDetailPage({ params }: Props) {
     }
   }
 
-  // const handleStartGame = async () => {
-  //   try {
-  //     await startGame({ roomId: params.id })
-  //   } catch (error) {
-  //     // @ts-ignore
-  //     if (error.message === 'At least 2 players to start a game!') {
-  //       toast({
-  //         variant: 'destructive',
-  //         title: 'Số người chơi quá ít!',
-  //         description: 'Cần ít nhất 2 người chơi để bắt đầu, hãy chia sẽ mã phòng cho bạn bè của bạn'
-  //       })
-  //     }
-  //     console.log(error)
-  //   }
-  // }
-
-  // if (!room) {
-  //   if (isLoading) {
-  //     return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Is loading</div>
-  //   } else {
-  //     return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Not found the room</div>
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   console.log({ currentUser })
-  // }, [currentUser])
+  const handleStartGame = async () => {
+    try {
+      await startGame({ roomId })
+    } catch (error: any) {
+      if (error?.message) {
+        toast({
+          variant: 'destructive',
+          title: error?.message
+        })
+      }
+    }
+  }
 
   useEffect(() => {
     const onRoomMessage = async (message: string) => {
-      console.log({ message })
-
       toast({
         title: message
       })
@@ -82,23 +66,23 @@ function RoomDetailPage({ params }: Props) {
     socket.on('room-message', onRoomMessage)
 
     if (currentPlayer) {
-      socket.emit('join-room', { roomId: roomId, username: currentPlayer?.user?.username })
+      socket.emit('join-room', { roomId, username: currentPlayer?.user?.username })
     }
-
-    console.log(currentPlayer)
 
     return () => {
       socket.off('room-message', onRoomMessage)
     }
-  }, [currentPlayer])
+  }, [currentPlayer, roomId, toast])
 
   useEffect(() => {
     const onBeforeunload = () => {
-      socket.emit('leave-room', {
-        roomId: roomId,
-        username: currentPlayer?.user.username,
-        clerkId: currentPlayer?.user.clerkId
-      })
+      if (currentPlayer) {
+        socket.emit('leave-room', {
+          roomId,
+          username: currentPlayer.user.username,
+          clerkId: currentPlayer.user.clerkId
+        })
+      }
     }
 
     window.addEventListener('beforeunload', onBeforeunload)
@@ -106,7 +90,7 @@ function RoomDetailPage({ params }: Props) {
     return () => {
       window.removeEventListener('beforeunload', onBeforeunload)
     }
-  }, [currentPlayer])
+  }, [currentPlayer, roomId])
 
   if (!room) {
     if (!isLoading) {
@@ -129,7 +113,9 @@ function RoomDetailPage({ params }: Props) {
         <div className='text-lg font-medium'>Mã phòng: {room.roomCode}</div>
         <div className='flex gap-3'>
           {room.roomOwner === currentPlayer?.userId && room.status === 'PRE_GAME' && (
-            <Button disabled={isLeavingRoom}>Bắt đầu</Button>
+            <Button disabled={isLeavingRoom} onClick={handleStartGame}>
+              Bắt đầu
+            </Button>
           )}
           <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
             Rời phòng {isLeavingRoom && <Loader />}
@@ -138,19 +124,7 @@ function RoomDetailPage({ params }: Props) {
       </div>
 
       {room.status === 'PRE_GAME' ? (
-        <div className='mt-4 flex flex-wrap gap-8'>
-          {players.map((p) => {
-            return (
-              <div key={p.userId} className='flex items-center gap-2'>
-                <Image src={p.user.picture} alt='player avatar' width={32} height={32} className='rounded-full' />
-                <div className='font-medium'>
-                  {p.user.username}
-                  {room?.roomOwner === p.userId && '(chủ phòng)'}
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        <PreGamePlayers roomId={roomId} />
       ) : (
         // <InGameBoard
         //   room={room}
@@ -160,7 +134,7 @@ function RoomDetailPage({ params }: Props) {
         //   pot={pot}
         //   winner={winner}
         // />
-        <></>
+        <>Game bắt đầu</>
       )}
     </>
   )

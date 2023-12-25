@@ -1,5 +1,5 @@
 import { Room } from '@/types'
-import { CreateRoomParams, GetRoomByIdParams, JoinRoomParams, LeaveRoomParams } from '../params'
+import { CreateRoomParams, GetRoomByIdParams, JoinRoomParams, LeaveRoomParams, StartGameParams } from '../params'
 
 export async function createRoom({ clerkId }: CreateRoomParams) {
   const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms`, {
@@ -44,4 +44,16 @@ export async function joinRoom({ roomCode, clerkId }: JoinRoomParams) {
 
 export async function getGameByRoomId({ id }: GetRoomByIdParams) {
   return await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/games/${id}`).then((response) => response.json())
+}
+
+export async function startGame({ roomId }: StartGameParams) {
+  await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/games/start`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      roomId
+    })
+  })
 }
