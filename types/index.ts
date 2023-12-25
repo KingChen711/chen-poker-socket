@@ -55,7 +55,7 @@ export type Hand = { holeCards: Card[]; rank: Rank | null; pokerCards: Card[] }
 // just use in room
 export type Player = {
   userId: string
-  user: User | null // just store at client
+  user: User
   hand: Hand
   balance: number
   bet: number

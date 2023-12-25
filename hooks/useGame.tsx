@@ -1,9 +1,10 @@
 import { db } from '@/firebase'
 import { Player, Room, User } from '@/types'
 import { collection, doc, getDocs, onSnapshot, query, where } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useCurrentUser } from './useCurrentUser'
 import { getGameByRoomId } from '@/lib/_actions/room'
+import { socket } from '@/services/socket'
 
 export function useGame(roomId: string) {
   const [room, setRoom] = useState<Room | null>(null)
@@ -43,23 +44,46 @@ export function useGame(roomId: string) {
   //   setPot(pot)
   // }, [players])
 
-  useEffect(() => {
-    const fetchGame = async () => {
-      const {
-        game: { room, players }
-      } = await getGameByRoomId({ id: roomId })
-
-      setRoom(room || null)
-      setPlayers(players || [])
-    }
-
+  const fetchGame = useCallback(async () => {
     try {
-      fetchGame()
+      const { game } = await getGameByRoomId({ id: roomId })
+      setRoom(game?.room || null)
+      setPlayers(game?.players || [])
     } catch (error) {
       setRoom(null)
       setPlayers([])
+    } finally {
+      setIsLoading(false)
     }
   }, [roomId])
+
+  useEffect(() => {
+    fetchGame()
+  }, [roomId])
+
+  useEffect(() => {
+    const onRoomChange = (room: Room) => {
+      setRoom((prev) => room || prev)
+    }
+
+    socket.on('room-change', onRoomChange)
+
+    return () => {
+      socket.off('room-change', onRoomChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onPlayersChange = (players: Player[]) => {
+      setPlayers((prev) => players || prev)
+    }
+
+    socket.on('players-change', onPlayersChange)
+
+    return () => {
+      socket.off('players-change', onPlayersChange)
+    }
+  }, [])
 
   return { room, players, playingPerson, pot, currentPlayer, winner, isLoading }
 }
