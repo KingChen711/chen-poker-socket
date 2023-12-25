@@ -11,7 +11,7 @@ export type LeaveRoomParams = {
 }
 
 export type JoinRoomParams = {
-  userId: string
+  clerkId: string
   roomCode: string
 }
 
