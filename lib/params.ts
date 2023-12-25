@@ -54,3 +54,7 @@ export type CleanUpInGameRoomParams = {
   roomId: string
   userId: string
 }
+
+export type GetRoomByIdParams = {
+  id: string
+}

@@ -3,14 +3,16 @@
 import InGameBoard from '@/components/room/InGameBoard'
 import Loader from '@/components/shared/Loader'
 import { Button } from '@/components/ui/button'
-import { toast } from '@/components/ui/use-toast'
-import { useRoom } from '@/hooks/useRoom'
 import { startGame } from '@/lib/actions/game'
 import { leaveRoom } from '@/lib/_actions/room'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { socket } from '@/services/socket'
+import { useToast } from '@/components/ui/use-toast'
+import { useAuth } from '@clerk/nextjs'
+import { useGame } from '@/hooks/useGame'
 
 type Props = {
   params: {
@@ -19,16 +21,18 @@ type Props = {
 }
 
 function RoomDetailPage({ params }: Props) {
+  const roomId = params.id
   const router = useRouter()
-  // const { room, players, playingPerson, pot, currentUser, winner, isLoading } = useRoom(params.id)
+  const { room, players, playingPerson, pot, currentPlayer, winner, isLoading } = useGame(roomId)
   const [isLeavingRoom, setIsLeavingRoom] = useState(false)
-  const currentUser = useCurrentUser()
+  const { userId: clerkId } = useAuth()
+  const { toast } = useToast()
 
-  const handleLeaveRoom = useCallback(async () => {
+  const handleLeaveRoom = async () => {
     setIsLeavingRoom(true)
     try {
-      if (currentUser) {
-        await leaveRoom({ clerkId: currentUser.clerkId })
+      if (clerkId) {
+        await leaveRoom({ clerkId: clerkId })
         router.push('/')
       }
     } catch (error) {
@@ -36,23 +40,23 @@ function RoomDetailPage({ params }: Props) {
     } finally {
       setIsLeavingRoom(false)
     }
-  }, [router, currentUser])
-
-  const handleStartGame = async () => {
-    try {
-      await startGame({ roomId: params.id })
-    } catch (error) {
-      // @ts-ignore
-      if (error.message === 'At least 2 players to start a game!') {
-        toast({
-          variant: 'destructive',
-          title: 'Số người chơi quá ít!',
-          description: 'Cần ít nhất 2 người chơi để bắt đầu, hãy chia sẽ mã phòng cho bạn bè của bạn'
-        })
-      }
-      console.log(error)
-    }
   }
+
+  // const handleStartGame = async () => {
+  //   try {
+  //     await startGame({ roomId: params.id })
+  //   } catch (error) {
+  //     // @ts-ignore
+  //     if (error.message === 'At least 2 players to start a game!') {
+  //       toast({
+  //         variant: 'destructive',
+  //         title: 'Số người chơi quá ít!',
+  //         description: 'Cần ít nhất 2 người chơi để bắt đầu, hãy chia sẽ mã phòng cho bạn bè của bạn'
+  //       })
+  //     }
+  //     console.log(error)
+  //   }
+  // }
 
   // if (!room) {
   //   if (isLoading) {
@@ -61,6 +65,38 @@ function RoomDetailPage({ params }: Props) {
   //     return <div className='inset-0 mt-96 flex items-center justify-center text-3xl'>Not found the room</div>
   //   }
   // }
+
+  // useEffect(() => {
+  //   console.log({ currentUser })
+  // }, [currentUser])
+
+  useEffect(() => {
+    const onConnect = async () => {
+      'client connect'
+    }
+
+    const onRoomMessage = async (message: string) => {
+      console.log({ message })
+
+      toast({
+        title: message
+      })
+    }
+
+    socket.on('connect', onConnect)
+    socket.on('room-message', onRoomMessage)
+
+    if (currentPlayer) {
+      socket.emit('join-room', { roomId: roomId, username: currentPlayer?.user?.username })
+    }
+
+    console.log(currentPlayer)
+
+    return () => {
+      socket.off('connect', onConnect)
+      socket.off('room-message', onRoomMessage)
+    }
+  }, [currentPlayer])
 
   return (
     <div className='mx-auto flex min-h-screen flex-col pt-24'>

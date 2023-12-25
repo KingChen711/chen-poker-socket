@@ -48,7 +48,6 @@ export type User = {
   username: string
   name: string
   createdAt: string
-  currentRoomId: string | null
 }
 
 export type Hand = { holeCards: Card[]; rank: Rank | null; pokerCards: Card[] }
