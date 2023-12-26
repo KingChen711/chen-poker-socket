@@ -28,13 +28,14 @@ export function useGame(roomId: string) {
     setCurrentPlayer(currentPlayer || null)
   }, [user, players])
 
-  // useEffect(() => {
-  //   if (!room || room.status === 'PRE_GAME') {
-  //     return
-  //   }
-  //   const index = room.gameObj.turn % room.players.length
-  //   setPlayingPerson(room.players[index].userId)
-  // }, [room])
+  useEffect(() => {
+    if (players.length === 0 || !room || room.status === 'PRE_GAME') {
+      setPlayingPerson(null)
+      return
+    }
+    const index = room.gameObj.turn % players.length
+    setPlayingPerson(players[index].userId)
+  }, [room, players])
 
   // useEffect(() => {
   //   let pot = 0

@@ -85,7 +85,11 @@ export type Room = {
 } & (
   | {
       gameObj: GameObj
-      status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER' | 'SHOWDOWN'
+      status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER'
+    }
+  | {
+      gameObj: GameObj & { winner: string }
+      status: 'SHOWDOWN'
     }
   | {
       gameObj: null

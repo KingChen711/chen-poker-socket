@@ -2,19 +2,15 @@
 
 import Loader from '@/components/shared/Loader'
 import { Button } from '@/components/ui/button'
-// import { startGame } from '@/lib/actions/game'
 import { leaveRoom, startGame } from '@/lib/_actions/room'
-import Image from 'next/image'
-import { notFound, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
-import { useCurrentUser } from '@/hooks/useCurrentUser'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { socket } from '@/services/socket'
 import { useToast } from '@/components/ui/use-toast'
-import { useAuth } from '@clerk/nextjs'
 import { useGame } from '@/hooks/useGame'
-import Link from 'next/link'
 import NoResult from '@/components/shared/NoResult'
 import PreGamePlayers from '@/components/room/PreGamePlayers'
+import InGameBoard from '@/components/room/InGameBoard'
 
 type Props = {
   params: {
@@ -126,15 +122,7 @@ function RoomDetailPage({ params }: Props) {
       {room.status === 'PRE_GAME' ? (
         <PreGamePlayers roomId={roomId} />
       ) : (
-        // <InGameBoard
-        //   room={room}
-        //   currentUser={currentUser}
-        //   players={players}
-        //   playingPerson={playingPerson}
-        //   pot={pot}
-        //   winner={winner}
-        // />
-        <>Game bắt đầu</>
+        <InGameBoard gameObj={room.gameObj} roomId={roomId} />
       )}
     </>
   )
