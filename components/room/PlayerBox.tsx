@@ -65,7 +65,12 @@ function PlayerBox({
         </div>
       ) : (
         <div className='-z-20 h-full w-full'>
-          <div className='absolute left-1/2 z-[5] aspect-[4.78/6.7] w-[50%] -translate-x-2/3'>
+          <div
+            className={cn(
+              'absolute left-1/2 z-[5] aspect-[4.78/6.7] w-[50%] -translate-x-2/3',
+              !hiddenCard && 'hover:scale-125'
+            )}
+          >
             {isShowdownStage && (
               <div className='absolute inset-0 z-30 translate-x-[30%] rotate-12 rounded-md bg-black/50'></div>
             )}
@@ -76,13 +81,18 @@ function PlayerBox({
               className={cn('rounded-md absolute translate-x-[30%] rotate-12', isShowdownStage && isWinner && 'z-50')}
             />
           </div>
-          <div className='absolute left-1/2 aspect-[4.78/6.7] w-[50%] -translate-x-2/3 rounded-md'>
+          <div
+            className={cn(
+              'absolute left-1/2 aspect-[4.78/6.7] w-[50%] -translate-x-2/3 rounded-md',
+              !hiddenCard && 'hover:scale-125 hover:z-10'
+            )}
+          >
             {isShowdownStage && <div className='absolute inset-0 z-30 -rotate-12 bg-black/50'></div>}
             <Image
               fill
               src={hiddenCard ? '/assets/cards/back-card.jpg' : getCardImage(player.hand.holeCards[1])!}
               alt='second card'
-              className={cn('rounded-md absolute -rotate-12', isShowdownStage && isWinner && 'z-50')}
+              className={cn('rounded-md absolute -rotate-12 z-10', isShowdownStage && isWinner && 'z-50')}
             />
           </div>
         </div>

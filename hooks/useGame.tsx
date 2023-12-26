@@ -37,13 +37,13 @@ export function useGame(roomId: string) {
     setPlayingPerson(players[index].userId)
   }, [room, players])
 
-  // useEffect(() => {
-  //   let pot = 0
-  //   players.forEach((p) => {
-  //     pot += p.bet!
-  //   })
-  //   setPot(pot)
-  // }, [players])
+  useEffect(() => {
+    let pot = 0
+    players.forEach((p) => {
+      pot += p.bet!
+    })
+    setPot(pot)
+  }, [players])
 
   const fetchGame = useCallback(async () => {
     try {
