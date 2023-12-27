@@ -4,7 +4,6 @@ import { Inter, Space_Grotesk as SpaceGrotesk, Merriweather } from 'next/font/go
 import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/contexts/ThemeProvider'
-import { viVN } from '@clerk/localizations'
 import { dark } from '@clerk/themes'
 
 const inter = Inter({
@@ -37,7 +36,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
-      localization={viVN}
       appearance={{
         baseTheme: dark,
         elements: {

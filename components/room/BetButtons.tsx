@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
-// import { allInBet, callBet, checkBet, foldBet, raiseBet } from '@/lib/actions/game'
 import {
   Dialog,
   DialogClose,
@@ -12,33 +11,15 @@ import {
 } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { useGameStore } from '@/store/game-store'
+import { toast } from '../ui/use-toast'
+import { callBet, checkBet } from '@/lib/_actions/game'
 
 function BetButtons() {
   const gameStore = useGameStore()
   const room = gameStore.room!
   const gameObj = room.gameObj!
   const currentPlayer = gameStore.currentPlayer
-
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
-  //   const handleCall = async () => {
-  //     try {
-  //       if (room && currentPlayer) {
-  //         await callBet({ roomId: room.id, userId: currentPlayer.userId })
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   const handleCheck = async () => {
-  //     try {
-  //       if (room && currentPlayer) {
-  //         await checkBet({ roomId: room.id, userId: currentPlayer.userId })
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
 
   //   const handleRaise = async () => {
   //     try {
@@ -74,6 +55,28 @@ function BetButtons() {
     return null
   }
 
+  const handleCall = async () => {
+    try {
+      await callBet({ roomId: room.id, userId: currentPlayer.userId })
+    } catch (error) {
+      toast({
+        title: 'Some thing went wrong!',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleCheck = async () => {
+    try {
+      await checkBet({ roomId: room.id, userId: currentPlayer.userId })
+    } catch (error) {
+      toast({
+        title: 'Some thing went wrong!',
+        variant: 'destructive'
+      })
+    }
+  }
+
   return (
     <div
       style={{ containerType: 'size' }}
@@ -86,9 +89,9 @@ function BetButtons() {
           currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
             <button
               className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-              // onClick={handleCall}
+              onClick={handleCall}
             >
-              Theo cược
+              Call
             </button>
           )}
 
@@ -104,7 +107,7 @@ function BetButtons() {
         {currentPlayer.bet === gameObj.callingValue && (
           <button
             className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            //   onClick={handleCheck}
+            onClick={handleCheck}
           >
             Check
           </button>

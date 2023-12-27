@@ -20,6 +20,7 @@ function InGameBoard() {
   return (
     <div className='relative mx-auto aspect-[9.1/5] w-10/12 min-w-[600px] bg-[url("/assets/images/table.png")] !bg-cover !bg-center'>
       <ShowdownScreen />
+
       <BetButtons />
 
       {gameStore.players.map((p, index) => {
@@ -42,21 +43,21 @@ function InGameBoard() {
           />
         )
       })}
-      {/* <div className='absolute left-1/2 top-1/2 z-20 mx-auto flex w-[45%] -translate-x-1/2 -translate-y-1/2 gap-3'>
+      <div className='absolute left-1/2 top-1/2 z-20 mx-auto flex w-[45%] -translate-x-1/2 -translate-y-1/2 gap-3'>
         {room.gameObj.communityCards.map((card) => {
           return (
             <div key={`${card.suit}-${card.value}`} className={cn('relative aspect-[0.6857] w-[20%]')}>
-              {winner && <div className='absolute inset-0 z-30 rounded-lg bg-black/50'></div>}
+              {gameStore.winner && <div className='absolute inset-0 z-30 rounded-lg bg-black/50'></div>}
               <Image
                 fill
                 src={getCardImage(card)!}
                 alt='board card'
-                className={cn('rounded-lg', winner && isWinnerCard(winner, card) && 'z-30')}
+                className={cn('rounded-lg', gameStore.winner && isWinnerCard(gameStore.winner, card) && 'z-30')}
               />
             </div>
           )
         })}
-      </div> */}
+      </div>
     </div>
   )
 }
