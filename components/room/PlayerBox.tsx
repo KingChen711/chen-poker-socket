@@ -76,7 +76,7 @@ function PlayerBox({
             )}
             <Image
               fill
-              src={hiddenCard ? '/assets/cards/back-card.jpg' : getCardImage(player.hand.holeCards[0])!}
+              src={hiddenCard || !player.hand ? '/assets/cards/back-card.jpg' : getCardImage(player.hand.holeCards[0])!}
               alt='first card'
               className={cn('rounded-md absolute translate-x-[30%] rotate-12', isShowdownStage && isWinner && 'z-50')}
             />
@@ -90,7 +90,7 @@ function PlayerBox({
             {isShowdownStage && <div className='absolute inset-0 z-30 -rotate-12 bg-black/50'></div>}
             <Image
               fill
-              src={hiddenCard ? '/assets/cards/back-card.jpg' : getCardImage(player.hand.holeCards[1])!}
+              src={hiddenCard || !player.hand ? '/assets/cards/back-card.jpg' : getCardImage(player.hand.holeCards[1])!}
               alt='second card'
               className={cn('rounded-md absolute -rotate-12 z-10', isShowdownStage && isWinner && 'z-50')}
             />

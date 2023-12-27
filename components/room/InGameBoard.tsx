@@ -4,48 +4,41 @@ import React from 'react'
 import { Button } from '../ui/button'
 import { GameObj, Player, Room } from '@/types'
 import { CardRank } from '@/constants/deck'
-import { useGame } from '@/hooks/useGame'
 import PlayerBox from './PlayerBox'
 import ShowdownScreen from './ShowdownScreen'
 import BetButtons from './BetButtons'
+import { useGameStore } from '@/store/game-store'
 
-type Props = {
-  //   room: Room & { status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER' | 'SHOWDOWN' }
-  //   players: Player[]
-  //   playingPerson: string | null
-  //   pot: number
-  //   currentUser: Player | null
-  //   winner: Player | null
-  gameObj: GameObj
-  roomId: string
-}
+function InGameBoard() {
+  const gameStore = useGameStore()
+  const room = gameStore.room!
 
-function InGameBoard({ roomId, gameObj }: Props) {
-  const { currentPlayer, winner, room, players, playingPerson, pot } = useGame(roomId)
+  if (room.status === 'PRE_GAME') {
+    return null
+  }
 
   return (
     <div className='relative mx-auto aspect-[9.1/5] w-10/12 min-w-[600px] bg-[url("/assets/images/table.png")] !bg-cover !bg-center'>
-      {room?.status === 'SHOWDOWN' && currentPlayer && (
-        <ShowdownScreen isReady={gameObj.readyPlayers.includes(currentPlayer.userId)} winner={winner!} />
-      )}
-      {currentPlayer?.userId === playingPerson && room?.status !== 'SHOWDOWN' && (
-        <BetButtons currentPlayer={currentPlayer} gameObj={gameObj} pot={pot} />
-      )}
-      {players.map((p, index) => {
+      <ShowdownScreen />
+      <BetButtons />
+
+      {gameStore.players.map((p, index) => {
         // spent one more position for the buttons actions
-        const { x, y } = getPlayerPosition(index + 1, players.length + 1)
+        const { x, y } = getPlayerPosition(index + 1, gameStore.players.length + 1)
+        console.log({ player: p })
+
         return (
           <PlayerBox
             key={p.userId}
             player={p}
             posX={x}
             posY={y}
-            isWinner={p.userId === winner?.userId}
-            isFolded={gameObj.foldPlayers.includes(p.userId)}
+            isWinner={p.userId === gameStore.winner?.userId}
+            isFolded={room!.gameObj!.foldPlayers.includes(p.userId)}
             isShowdownStage={room?.status === 'SHOWDOWN'}
-            showDealerIcon={p.userId === room?.gameObj?.dealer}
-            showStand={p.userId === playingPerson && !winner}
-            hiddenCard={p.userId !== currentPlayer?.userId}
+            showDealerIcon={p.userId === room!.gameObj!.dealer}
+            showStand={p.userId === gameStore.playingUserId && !gameStore.winner}
+            hiddenCard={p.userId !== gameStore.currentPlayer?.userId}
           />
         )
       })}

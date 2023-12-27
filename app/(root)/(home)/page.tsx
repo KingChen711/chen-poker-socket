@@ -17,7 +17,7 @@ function Home() {
           just pure fun.
         </p>
 
-        <HomeButtons clerkId={clerkId!} />
+        <HomeButtons clerkId={clerkId} />
       </div>
 
       <div className='col-span-12 flex items-center justify-center p-6 lg:col-span-6'>

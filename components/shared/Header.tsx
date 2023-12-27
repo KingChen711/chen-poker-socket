@@ -1,7 +1,8 @@
-import { UserButton } from '@clerk/nextjs'
+import { SignedIn, UserButton, SignedOut, SignInButton, SignUpButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { Button } from '../ui/button'
 
 function Header() {
   return (
@@ -14,17 +15,27 @@ function Header() {
           </div>
         </Link>
         <div className='flex items-center gap-3'>
-          <UserButton
-            afterSignOutUrl='/sign-in'
-            appearance={{
-              elements: {
-                avatarBox: 'h-10 w-10'
-              },
-              variables: {
-                colorPrimary: '#E11D48'
-              }
-            }}
-          />
+          <SignedIn>
+            <UserButton
+              afterSignOutUrl='/'
+              appearance={{
+                elements: {
+                  avatarBox: 'h-10 w-10'
+                },
+                variables: {
+                  colorPrimary: '#E11D48'
+                }
+              }}
+            />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton>
+              <Button>Sign in</Button>
+            </SignInButton>
+            <SignUpButton>
+              <Button variant='secondary'>Sign up</Button>
+            </SignUpButton>
+          </SignedOut>
         </div>
       </div>
     </header>

@@ -1,4 +1,3 @@
-import { GameObj, Player, Room } from '@/types'
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 // import { allInBet, callBet, checkBet, foldBet, raiseBet } from '@/lib/actions/game'
@@ -12,16 +11,14 @@ import {
   DialogTrigger
 } from '../ui/dialog'
 import { Input } from '../ui/input'
+import { useGameStore } from '@/store/game-store'
 
-type Props = {
-  //   winner: Player | null
-  //   room: Room & { status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER' | 'SHOWDOWN' }
-  currentPlayer: Player
-  pot: number
-  gameObj: GameObj
-}
+function BetButtons() {
+  const gameStore = useGameStore()
+  const room = gameStore.room!
+  const gameObj = room.gameObj!
+  const currentPlayer = gameStore.currentPlayer
 
-function BetButtons({ pot, currentPlayer, gameObj }: Props) {
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
   //   const handleCall = async () => {
   //     try {
@@ -73,12 +70,16 @@ function BetButtons({ pot, currentPlayer, gameObj }: Props) {
   //     }
   //   }
 
+  if (currentPlayer?.userId !== gameStore.playingUserId || room.status === 'SHOWDOWN') {
+    return null
+  }
+
   return (
     <div
       style={{ containerType: 'size' }}
       className='absolute left-1/2 top-[7%] flex w-2/3 -translate-x-1/2 flex-col items-center'
     >
-      <div className='mb-[0.5%] text-[6cqw] font-bold text-foreground'>${pot}</div>
+      <div className='mb-[0.5%] text-[6cqw] font-bold text-foreground'>${gameStore.pot}</div>
 
       <div className='flex w-full items-center justify-center gap-[2%]'>
         {currentPlayer.bet < gameObj.callingValue &&

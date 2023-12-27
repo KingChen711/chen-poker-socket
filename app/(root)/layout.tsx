@@ -1,4 +1,5 @@
 import Header from '@/components/shared/Header'
+import LoadingScreen from '@/components/shared/LoadingScreen'
 import { Toaster } from '@/components/ui/toaster'
 import React from 'react'
 
@@ -12,6 +13,7 @@ const Layout = async ({ children }: Props) => {
       <Header />
       <div className='mx-auto w-9/12'>{children}</div>
       <Toaster />
+      <LoadingScreen />
     </main>
   )
 }

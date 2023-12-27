@@ -1,16 +1,17 @@
 'use client'
 
-import Loader from '@/components/shared/Loader'
-import { Button } from '@/components/ui/button'
-import { leaveRoom, startGame } from '@/lib/_actions/room'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { socket } from '@/services/socket'
-import { useToast } from '@/components/ui/use-toast'
-import { useGame } from '@/hooks/useGame'
+import { toast } from '@/components/ui/use-toast'
 import NoResult from '@/components/shared/NoResult'
 import PreGamePlayers from '@/components/room/PreGamePlayers'
 import InGameBoard from '@/components/room/InGameBoard'
+import { useLoadingScreenStore } from '@/store/loading-screen.store'
+import RoomButtons from '@/components/room/RoomButtons'
+import { getGameByRoomId } from '@/lib/_actions/room'
+import { useGameStore } from '@/store/game-store'
+import { Player, Room } from '@/types'
+import { useCurrentUser } from '@/hooks/useCurrentUser'
 
 type Props = {
   params: {
@@ -20,38 +21,90 @@ type Props = {
 
 function RoomDetailPage({ params }: Props) {
   const roomId = params.id
-  const router = useRouter()
-  const { room, currentPlayer, isLoading } = useGame(roomId)
-  const [isLeavingRoom, setIsLeavingRoom] = useState(false)
-  const { toast } = useToast()
+  const { room, currentPlayer, players } = useGameStore()
+  const [isLoading, setIsLoading] = useState(true)
+  const user = useCurrentUser()
 
-  const handleLeaveRoom = async () => {
-    setIsLeavingRoom(true)
-    try {
-      if (currentPlayer) {
-        await leaveRoom({ clerkId: currentPlayer.user.clerkId })
-        router.push('/')
-      }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLeavingRoom(false)
-    }
-  }
-
-  const handleStartGame = async () => {
-    try {
-      await startGame({ roomId })
-    } catch (error: any) {
-      if (error?.message) {
-        toast({
-          variant: 'destructive',
-          title: error?.message
-        })
+  // fetch game data
+  useEffect(() => {
+    const fetchGame = async () => {
+      try {
+        const { game } = await getGameByRoomId({ id: roomId })
+        useGameStore.setState({ room: game?.room || null, players: game?.players || [] })
+      } catch (error) {
+        useGameStore.setState({ room: null, players: [] })
+      } finally {
+        setIsLoading(false)
       }
     }
-  }
 
+    fetchGame()
+  }, [roomId])
+
+  // handle winner
+  useEffect(() => {
+    const winnerId = room?.gameObj?.winner
+    useGameStore.setState({ winner: winnerId ? players.find((p) => p.userId === winnerId) || null : null })
+  }, [room, players])
+
+  // handle playing user id
+  useEffect(() => {
+    if (players.length === 0 || !room || room.status === 'PRE_GAME') {
+      useGameStore.setState({ playingUserId: '' })
+      return
+    }
+    const index = room.gameObj.turn % players.length
+    useGameStore.setState({ playingUserId: players[index].userId })
+  }, [room, players])
+
+  // handle current player
+  useEffect(() => {
+    const currentPlayer = players.find((p) => {
+      return p.userId === user?.id
+    })
+    useGameStore.setState({ currentPlayer: currentPlayer || null })
+  }, [user, players])
+
+  // handle pot
+  useEffect(() => {
+    let pot = 0
+    players.forEach((p) => {
+      pot += p.bet!
+    })
+    useGameStore.setState({ pot })
+  }, [players])
+
+  // handle real-time players change
+  useEffect(() => {
+    const onPlayersChange = (players: Player[]) => {
+      useGameStore.setState((state) => ({
+        players: players || state.players
+      }))
+    }
+
+    socket.on('players-change', onPlayersChange)
+
+    return () => {
+      socket.off('players-change', onPlayersChange)
+    }
+  }, [])
+
+  // handle real-time room change
+  useEffect(() => {
+    const onRoomChange = (room: Room) => {
+      useGameStore.setState((state) => ({
+        room: room || state.room
+      }))
+    }
+
+    socket.on('room-change', onRoomChange)
+
+    return () => {
+      socket.off('room-change', onRoomChange)
+    }
+  }, [])
+
+  // handle real-time message
   useEffect(() => {
     const onRoomMessage = async (message: string) => {
       toast({
@@ -68,8 +121,9 @@ function RoomDetailPage({ params }: Props) {
     return () => {
       socket.off('room-message', onRoomMessage)
     }
-  }, [currentPlayer, roomId, toast])
+  }, [currentPlayer, roomId])
 
+  // handle beforeunload
   useEffect(() => {
     const onBeforeunload = () => {
       if (currentPlayer) {
@@ -88,6 +142,15 @@ function RoomDetailPage({ params }: Props) {
     }
   }, [currentPlayer, roomId])
 
+  // handle loading screen
+  useEffect(() => {
+    if (!room && isLoading) {
+      useLoadingScreenStore.getState().showLoading('Is loading the room...')
+    } else {
+      useLoadingScreenStore.getState().hiddenLoading()
+    }
+  }, [room, isLoading])
+
   if (!room) {
     if (!isLoading) {
       return (
@@ -99,32 +162,15 @@ function RoomDetailPage({ params }: Props) {
         />
       )
     } else {
-      // TODO: display finding room and other loading of buttons
       return null
     }
   }
 
   return (
     <>
-      <div className='mt-2 flex justify-between gap-6'>
-        <div className='text-lg font-medium'>Mã phòng: {room.roomCode}</div>
-        <div className='flex gap-3'>
-          {room.roomOwner === currentPlayer?.userId && room.status === 'PRE_GAME' && (
-            <Button disabled={isLeavingRoom} onClick={handleStartGame}>
-              Bắt đầu
-            </Button>
-          )}
-          <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
-            Rời phòng {isLeavingRoom && <Loader />}
-          </Button>
-        </div>
-      </div>
-
-      {room.status === 'PRE_GAME' ? (
-        <PreGamePlayers roomId={roomId} />
-      ) : (
-        <InGameBoard gameObj={room.gameObj} roomId={roomId} />
-      )}
+      <RoomButtons />
+      <PreGamePlayers />
+      <InGameBoard />
     </>
   )
 }
