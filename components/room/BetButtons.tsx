@@ -12,7 +12,7 @@ import {
 import { Input } from '../ui/input'
 import { useGameStore } from '@/store/game-store'
 import { toast } from '../ui/use-toast'
-import { callBet, checkBet } from '@/lib/_actions/game'
+import { callBet, checkBet, foldBet, raiseBet } from '@/lib/_actions/game'
 
 function BetButtons() {
   const gameStore = useGameStore()
@@ -20,26 +20,6 @@ function BetButtons() {
   const gameObj = room.gameObj!
   const currentPlayer = gameStore.currentPlayer
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
-
-  //   const handleRaise = async () => {
-  //     try {
-  //       if (room && currentPlayer && raiseValue) {
-  //         await raiseBet({ roomId: room.id, userId: currentPlayer.userId, raiseValue })
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   const handleFold = async () => {
-  //     try {
-  //       if (room && currentPlayer) {
-  //         await foldBet({ roomId: room.id, userId: currentPlayer.userId })
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
 
   //   const handleAllIn = async () => {
   //     try {
@@ -69,6 +49,30 @@ function BetButtons() {
   const handleCheck = async () => {
     try {
       await checkBet({ roomId: room.id, userId: currentPlayer.userId })
+    } catch (error) {
+      toast({
+        title: 'Some thing went wrong!',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleRaise = async () => {
+    try {
+      if (raiseValue) {
+        await raiseBet({ roomId: room.id, userId: currentPlayer.userId, raiseValue })
+      }
+    } catch (error) {
+      toast({
+        title: 'Some thing went wrong!',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handleFold = async () => {
+    try {
+      await foldBet({ roomId: room.id, userId: currentPlayer.userId })
     } catch (error) {
       toast({
         title: 'Some thing went wrong!',
@@ -116,26 +120,26 @@ function BetButtons() {
         {currentPlayer.bet < gameObj.callingValue && (
           <button
             className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            // onClick={handleFold}
+            onClick={handleFold}
           >
-            Bỏ bài
+            Fold
           </button>
         )}
 
         {currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
           <Dialog>
             <DialogTrigger className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'>
-              Cược thêm
+              Raise
             </DialogTrigger>
             <DialogContent className='w-[400px]'>
               <DialogHeader>
-                <DialogTitle className='mt-2'>Cược thêm</DialogTitle>
+                <DialogTitle className='mt-2'>Raise</DialogTitle>
                 <DialogDescription>
                   <div className='flex items-center gap-1 font-medium'>
-                    Tài khoản của bạn: <div className='text-lg text-primary'>{currentPlayer?.balance || 0}$</div>
+                    Your balance: <div className='text-lg text-primary'>{currentPlayer?.balance || 0}$</div>
                   </div>
                   <div className='flex items-center gap-1 font-medium'>
-                    Số tiền cần bỏ thêm:{' '}
+                    Need to pay extra:{' '}
                     <div className='text-lg text-primary'>
                       {gameObj.callingValue - currentPlayer.bet + (raiseValue || 0)}$
                     </div>
@@ -150,22 +154,22 @@ function BetButtons() {
                     }}
                     value={raiseValue || ''}
                     type='number'
-                    placeholder='Nhập số tiền cược thêm'
+                    placeholder='Enter the raise value...'
                     className='mt-2'
                   />
 
                   <div className='flex justify-end gap-3'>
                     <DialogClose asChild>
                       <Button className='mt-4' variant='secondary'>
-                        Thôi
+                        Cancel
                       </Button>
                     </DialogClose>
                     <Button
-                      //   onClick={handleRaise}
+                      onClick={handleRaise}
                       disabled={gameObj.callingValue - currentPlayer.bet + (raiseValue || 0) > currentPlayer.balance}
                       className='mt-4'
                     >
-                      Cược
+                      Bet
                     </Button>
                   </div>
                 </DialogDescription>

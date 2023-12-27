@@ -27,10 +27,10 @@ function ShowdownScreen() {
   return (
     <div className='fixed inset-0 z-10 flex flex-col bg-black/50 font-merriweather font-black'>
       <div className='mt-[3%] flex items-center justify-center text-[3cqw] font-medium text-white'>
-        <p className='capitalize text-primary'>{winner!.user.username} Thắng!</p>
+        <p className='capitalize text-primary'>{winner?.user.username} Thắng!</p>
       </div>
       <div className='flex items-center justify-center text-[3cqw] font-medium italic text-primary'>
-        {CardRank.get(winner!.hand.rank!)}
+        {winner && CardRank.get(winner.hand.rank!)}
       </div>
 
       <Button

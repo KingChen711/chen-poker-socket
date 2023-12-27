@@ -39,7 +39,7 @@ function InGameBoard() {
             isShowdownStage={room?.status === 'SHOWDOWN'}
             showDealerIcon={p.userId === room!.gameObj!.dealer}
             showStand={p.userId === gameStore.playingUserId && !gameStore.winner}
-            hiddenCard={p.userId !== gameStore.currentPlayer?.userId}
+            hiddenCard={p.userId !== gameStore.currentPlayer?.userId && !gameStore.winner}
           />
         )
       })}
