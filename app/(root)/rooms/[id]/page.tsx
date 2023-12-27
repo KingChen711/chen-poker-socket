@@ -92,13 +92,14 @@ function RoomDetailPage({ params }: Props) {
     if (!isLoading) {
       return (
         <NoResult
-          title='No Poker Rooms Available – Time for a New Deal!'
-          description="🔍 Seems all the tables are full house right now. Don't fold just yet! 🔄 Refresh to join an upcoming game or ✨ Create Your Own Room and invite friends to play. Whether you're a high roller or a casual player, we've got a seat with your name on it. 🃏🍀"
+          title='404 - No Poker Room Available – Time for a New Deal!'
+          description="🔍 Seems all the tables are full house right now. Don't fold just yet! ✨ Create Your Own Room and invite friends to play. Whether you're a high roller or a casual player, we've got a seat with your name on it. 🃏🍀"
           link='/'
           linkTitle='Return Home'
         />
       )
     } else {
+      // TODO: display finding room and other loading of buttons
       return null
     }
   }

@@ -1,7 +1,10 @@
 import HomeButtons from '@/components/home/HomeButtons'
 import Image from 'next/image'
+import bannerImage from '@/public/assets/images/banner-2.png'
+import { auth } from '@clerk/nextjs'
 
 function Home() {
+  const { userId: clerkId } = auth()
   return (
     <main className='grid min-h-screen grid-cols-12 pb-6 pt-24'>
       <div className='col-span-12 flex flex-col items-center justify-center py-6 lg:col-span-6 lg:items-start'>
@@ -14,12 +17,12 @@ function Home() {
           just pure fun.
         </p>
 
-        <HomeButtons />
+        <HomeButtons clerkId={clerkId!} />
       </div>
 
       <div className='col-span-12 flex items-center justify-center p-6 lg:col-span-6'>
         <div className='relative aspect-square w-[95%]'>
-          <Image fill src='/assets/images/banner-2.png' alt='banner' />
+          <Image fill src={bannerImage} priority alt='banner' />
         </div>
       </div>
     </main>

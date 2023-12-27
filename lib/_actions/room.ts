@@ -1,18 +1,31 @@
 import { Room } from '@/types'
 import { CreateRoomParams, GetRoomByIdParams, JoinRoomParams, LeaveRoomParams, StartGameParams } from '../params'
+import { createRoomErrorMessages, joinRoomErrorMessages } from '@/constants/error-message'
 
 export async function createRoom({ clerkId }: CreateRoomParams) {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      clerkId
-    })
-  }).then((response) => response.json())
+  try {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        clerkId
+      })
+    }).then((response) => response.json())
 
-  return data.room as Room
+    if (data.statusCode !== 200) {
+      throw new Error(data.message)
+    }
+
+    return data.room as Room
+  } catch (error: any) {
+    let errorMessage = error?.message
+    if (!createRoomErrorMessages.includes(errorMessage)) {
+      errorMessage = 'Something went wrong when creating room'
+    }
+    throw new Error(errorMessage)
+  }
 }
 
 export async function leaveRoom({ clerkId }: LeaveRoomParams) {
@@ -28,18 +41,30 @@ export async function leaveRoom({ clerkId }: LeaveRoomParams) {
 }
 
 export async function joinRoom({ roomCode, clerkId }: JoinRoomParams) {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms/join`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      roomCode,
-      clerkId
-    })
-  }).then((response) => response.json())
+  try {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/rooms/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        roomCode,
+        clerkId
+      })
+    }).then((response) => response.json())
 
-  return data.room as Room
+    if (data.statusCode !== 200) {
+      throw new Error(data.message)
+    }
+
+    return data.room as Room
+  } catch (error: any) {
+    let errorMessage = error?.message
+    if (!joinRoomErrorMessages.includes(errorMessage)) {
+      errorMessage = 'Something went wrong when joining room'
+    }
+    throw new Error(errorMessage)
+  }
 }
 
 export async function getGameByRoomId({ id }: GetRoomByIdParams) {
