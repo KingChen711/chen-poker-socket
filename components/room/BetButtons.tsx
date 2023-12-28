@@ -12,7 +12,7 @@ import {
 import { Input } from '../ui/input'
 import { useGameStore } from '@/store/game-store'
 import { toast } from '../ui/use-toast'
-import { callBet, checkBet, foldBet, raiseBet } from '@/lib/_actions/game'
+import { allInBet, callBet, checkBet, foldBet, raiseBet } from '@/lib/_actions/game'
 
 function BetButtons() {
   const gameStore = useGameStore()
@@ -20,16 +20,6 @@ function BetButtons() {
   const gameObj = room.gameObj!
   const currentPlayer = gameStore.currentPlayer
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
-
-  //   const handleAllIn = async () => {
-  //     try {
-  //       if (room && currentPlayer) {
-  //         await allInBet({ roomId: room.id, userId: currentPlayer.userId })
-  //       }
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
 
   if (currentPlayer?.userId !== gameStore.playingUserId || room.status === 'SHOWDOWN') {
     return null
@@ -81,6 +71,17 @@ function BetButtons() {
     }
   }
 
+  const handleAllIn = async () => {
+    try {
+      await allInBet({ roomId: room.id, userId: currentPlayer.userId })
+    } catch (error) {
+      toast({
+        title: 'Some thing went wrong!',
+        variant: 'destructive'
+      })
+    }
+  }
+
   return (
     <div
       style={{ containerType: 'size' }}
@@ -102,7 +103,7 @@ function BetButtons() {
         {currentPlayer.balance + currentPlayer.bet <= gameObj.callingValue && (
           <button
             className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            //   onClick={handleAllIn}
+            onClick={handleAllIn}
           >
             All in
           </button>

@@ -34,6 +34,11 @@ export type AllInBetParams = {
   userId: string
 }
 
+export type ReadyNextMatchParams = {
+  roomId: string
+  userId: string
+}
+
 export type FoldBetParams = {
   roomId: string
   userId: string
