@@ -57,11 +57,21 @@ export function isWinnerCard(winner: Player, card: Card) {
   return winnerCards?.includes(checkedCard)
 }
 
-export function getPlayerPosition(index: number, amountOfPlayers: number) {
+export function getPlayerPosition(index: number, amountOfPlayers: number, chip = false) {
   const angle = Math.PI * (1 / 2 - (2 * index) / amountOfPlayers)
 
-  const x = 0.5 * (Math.cos(angle) + 1) * 100
+  let x = 0.5 * (Math.cos(angle) + 1) * 100
   const y = 0.5 * (1 - Math.sin(angle)) * 100
+
+  if (chip) {
+    if (y >= 80) {
+      x += 10
+    }
+
+    if (y <= 20) {
+      x -= 10
+    }
+  }
 
   return { x, y }
 }

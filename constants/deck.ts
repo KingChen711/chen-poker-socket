@@ -145,3 +145,19 @@ export const CardRank: Map<Rank, string> = new Map([
   [Rank.StraightFlush, 'Sảnh Thùng'],
   [Rank.RoyalFlush, 'Thùng Phá Sảnh']
 ])
+
+export const denominationToChipImage: Map<string, string> = new Map<string, string>([
+  ['1', '/assets/chips/chip-1.png'],
+  ['10', '/assets/chips/chip-10.png'],
+  ['100', '/assets/chips/chip-100.png'],
+  ['500', '/assets/chips/chip-500.png'],
+  ['1000', '/assets/chips/chip-1000.png']
+])
+
+export const denominationToPosChip: Map<string, string> = new Map<string, string>([
+  ['1', 'translate(0%,0%)'],
+  ['10', 'translate(45%,0%)'],
+  ['100', 'translate(0%,42%)'],
+  ['500', 'translate(45%,42%)'],
+  ['1000', 'translate(85%,20%)']
+])

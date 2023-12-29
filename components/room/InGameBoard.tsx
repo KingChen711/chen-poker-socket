@@ -8,6 +8,7 @@ import PlayerBox from './PlayerBox'
 import ShowdownScreen from './ShowdownScreen'
 import BetButtons from './BetButtons'
 import { useGameStore } from '@/store/game-store'
+import ChipStack from './ChipStack'
 
 function InGameBoard() {
   const gameStore = useGameStore()
@@ -26,7 +27,6 @@ function InGameBoard() {
       {gameStore.players.map((p, index) => {
         // spent one more position for the buttons actions
         const { x, y } = getPlayerPosition(index + 1, gameStore.players.length + 1)
-        console.log({ player: p })
 
         return (
           <PlayerBox
@@ -43,6 +43,16 @@ function InGameBoard() {
           />
         )
       })}
+
+      <div className='absolute inset-[14%] z-[1]'>
+        {gameStore.players.map((p, index) => {
+          // spent one more position for the buttons actions
+          const { x, y } = getPlayerPosition(index + 1, gameStore.players.length + 1, true)
+
+          return <ChipStack posX={x} posY={y} key={p.userId} amount={p.balance} />
+        })}
+      </div>
+
       <div className='absolute left-1/2 top-1/2 z-20 mx-auto flex w-[45%] -translate-x-1/2 -translate-y-1/2 gap-3'>
         {room.gameObj.communityCards.map((card) => {
           return (

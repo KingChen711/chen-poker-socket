@@ -24,7 +24,7 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
         top: `${posY}%`
       }}
       className={cn(
-        'absolute flex aspect-[1.08/1] w-[17%] -translate-x-1/2 -translate-y-1/2 flex-col',
+        'absolute flex aspect-[1.08/1] w-[17%] -translate-x-1/2 -translate-y-1/2 flex-col z-[2]',
         isWinner && 'z-20'
       )}
     >

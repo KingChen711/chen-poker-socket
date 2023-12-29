@@ -13,6 +13,7 @@ import { Input } from '../ui/input'
 import { useGameStore } from '@/store/game-store'
 import { toast } from '../ui/use-toast'
 import { allInBet, callBet, checkBet, foldBet, raiseBet } from '@/lib/_actions/game'
+import ChipStack from './ChipStack'
 
 function BetButtons() {
   const gameStore = useGameStore()
@@ -85,9 +86,12 @@ function BetButtons() {
   return (
     <div
       style={{ containerType: 'size' }}
-      className='absolute left-1/2 top-[7%] flex w-2/3 -translate-x-1/2 flex-col items-center'
+      className='absolute left-1/2 top-[-2%] flex w-2/3 -translate-x-1/2 flex-col items-center'
     >
-      <div className='mb-[0.5%] text-[6cqw] font-bold text-foreground'>${gameStore.pot}</div>
+      <div className='relative mb-[12%] text-[4cqw] font-bold text-foreground'>
+        ${gameStore.pot}
+        <ChipStack posX={65} posY={230} amount={1611} pot />
+      </div>
 
       <div className='flex w-full items-center justify-center gap-[2%]'>
         {currentPlayer.bet < gameObj.callingValue &&
