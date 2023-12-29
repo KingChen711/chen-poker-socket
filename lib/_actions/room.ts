@@ -72,13 +72,25 @@ export async function getGameByRoomId({ id }: GetRoomByIdParams) {
 }
 
 export async function startGame({ roomId }: StartGameParams) {
-  await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/games/start`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      roomId
-    })
-  })
+  try {
+    const data = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/games/start`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        roomId
+      })
+    }).then((response) => response.json())
+
+    if (data.statusCode !== 200) {
+      throw new Error(data.message)
+    }
+  } catch (error: any) {
+    const message = error?.message
+    if (message === 'At least 2 players to start a game!') {
+      throw new Error(message)
+    }
+    throw new Error('Something went wrong!')
+  }
 }

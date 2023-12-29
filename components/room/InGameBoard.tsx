@@ -1,9 +1,7 @@
 import { cn, getCardImage, getPlayerPosition, isWinnerCard } from '@/lib/utils'
 import Image from 'next/image'
 import React from 'react'
-import { Button } from '../ui/button'
-import { GameObj, Player, Room } from '@/types'
-import { CardRank } from '@/constants/deck'
+import TableImage from '@/public/assets/images/table.png'
 import PlayerBox from './PlayerBox'
 import ShowdownScreen from './ShowdownScreen'
 import BetButtons from './BetButtons'
@@ -19,7 +17,9 @@ function InGameBoard() {
   }
 
   return (
-    <div className='relative mx-auto aspect-[9.1/5] w-10/12 min-w-[600px] bg-[url("/assets/images/table.png")] !bg-cover !bg-center'>
+    <div className='relative mx-auto aspect-[9.1/5] w-10/12 min-w-[600px]'>
+      <Image alt='bg-auth' src={TableImage} className='absolute inset-0 -z-10' fill priority />
+
       <ShowdownScreen />
 
       <BetButtons />
@@ -53,10 +53,10 @@ function InGameBoard() {
         })}
       </div>
 
-      <div className='absolute left-1/2 top-1/2 z-20 mx-auto flex w-[45%] -translate-x-1/2 -translate-y-1/2 gap-3'>
+      <div className='absolute left-1/2 top-1/2 z-20 mx-auto grid w-[45%] -translate-x-1/2 -translate-y-1/2 grid-cols-5 gap-[2%]'>
         {room.gameObj.communityCards.map((card) => {
           return (
-            <div key={`${card.suit}-${card.value}`} className={cn('relative aspect-[0.6857] w-[20%]')}>
+            <div key={`${card.suit}-${card.value}`} className={cn('relative aspect-[0.6857] col-span-1 w-full')}>
               {gameStore.winner && <div className='absolute inset-0 z-30 rounded-lg bg-black/50'></div>}
               <Image
                 fill

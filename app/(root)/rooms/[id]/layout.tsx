@@ -1,6 +1,4 @@
 import React from 'react'
-import bgImage from '@/public/assets/images/bg-room.jpeg'
-import Image from 'next/image'
 
 type Props = {
   children: React.ReactNode
@@ -9,7 +7,12 @@ type Props = {
 const Layout = async ({ children }: Props) => {
   return (
     <div className='mx-auto flex min-h-screen flex-col pt-24'>
-      <Image src={bgImage} className='fixed inset-0 -z-50' fill alt='bg-room' priority />
+      <div
+        style={{
+          backgroundImage: 'url("/assets/images/bg-room-2.jpeg")'
+        }}
+        className='fixed inset-0 -z-50'
+      />
       {children}
     </div>
   )

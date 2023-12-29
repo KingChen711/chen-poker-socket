@@ -134,16 +134,16 @@ export const BalanceValue = 1000
 // type TCardRank = { [key: any]: string }
 
 export const CardRank: Map<Rank, string> = new Map([
-  [Rank.HighCard, 'Mậu Thầu'],
-  [Rank.OnePair, '1 Đôi'],
-  [Rank.TwoPair, '2 Đôi'],
-  [Rank.ThreeOfKind, 'Sám'],
-  [Rank.Straight, 'Sảnh'],
-  [Rank.Flush, 'Thùng'],
-  [Rank.FullHouse, 'Cù Lũ'],
-  [Rank.FourOfKind, 'Tứ Quý'],
-  [Rank.StraightFlush, 'Sảnh Thùng'],
-  [Rank.RoyalFlush, 'Thùng Phá Sảnh']
+  [Rank.HighCard, 'High Card'],
+  [Rank.OnePair, '1 Pair'],
+  [Rank.TwoPair, '2 Pair'],
+  [Rank.ThreeOfKind, 'Three Of Kind'],
+  [Rank.Straight, 'Straight'],
+  [Rank.Flush, 'Flush'],
+  [Rank.FullHouse, 'Full House'],
+  [Rank.FourOfKind, 'Four Of Kind'],
+  [Rank.StraightFlush, 'Straight Flush'],
+  [Rank.RoyalFlush, 'Straight Flush']
 ])
 
 export const denominationToChipImage: Map<string, string> = new Map<string, string>([

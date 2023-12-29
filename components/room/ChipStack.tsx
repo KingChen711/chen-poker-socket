@@ -1,7 +1,7 @@
 import { denominationToChipImage, denominationToPosChip } from '@/constants/deck'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
-import { CSSProperties, useEffect, useState } from 'react'
+import { CSSProperties } from 'react'
 
 export type Stack = {
   denomination: number
@@ -42,7 +42,7 @@ const ChipStack = ({ amount, posX, posY, pot = false }: Props) => {
         left: `${posX}%`,
         top: `${posY}%`
       }}
-      className={cn('absolute aspect-square w-[10%] -translate-x-1/2 -translate-y-1/2', pot && 'w-[230%]')}
+      className={cn('absolute aspect-square w-[10%] -translate-x-1/2 -translate-y-1/2', pot && 'mt-[13.5%]')}
     >
       {stacks.map((stack, index) => (
         <StackComponent

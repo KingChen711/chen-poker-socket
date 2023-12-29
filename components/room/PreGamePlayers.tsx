@@ -18,7 +18,7 @@ function PreGamePlayers() {
             <Image src={p.user.picture} alt='player avatar' width={32} height={32} className='rounded-full' />
             <div className='font-medium'>
               {p.user.username}
-              {room.roomOwner === p.userId && '(chủ phòng)'}
+              {room.roomOwner === p.userId && "(room's owner)"}
             </div>
           </div>
         )

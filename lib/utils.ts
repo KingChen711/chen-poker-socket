@@ -64,12 +64,11 @@ export function getPlayerPosition(index: number, amountOfPlayers: number, chip =
   const y = 0.5 * (1 - Math.sin(angle)) * 100
 
   if (chip) {
-    if (y >= 80) {
-      x += 10
-    }
-
-    if (y <= 20) {
-      x -= 10
+    if (y >= 80 || y <= 20) {
+      if (x <= 50) x += 6
+      else {
+        x -= 8
+      }
     }
   }
 

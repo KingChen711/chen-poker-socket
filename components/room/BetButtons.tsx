@@ -22,13 +22,13 @@ function BetButtons() {
   const currentPlayer = gameStore.currentPlayer
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
 
-  if (currentPlayer?.userId !== gameStore.playingUserId || room.status === 'SHOWDOWN') {
+  if (room.status === 'SHOWDOWN') {
     return null
   }
 
   const handleCall = async () => {
     try {
-      await callBet({ roomId: room.id, userId: currentPlayer.userId })
+      await callBet({ roomId: room.id, userId: currentPlayer!.userId })
     } catch (error) {
       toast({
         title: 'Some thing went wrong!',
@@ -39,7 +39,7 @@ function BetButtons() {
 
   const handleCheck = async () => {
     try {
-      await checkBet({ roomId: room.id, userId: currentPlayer.userId })
+      await checkBet({ roomId: room.id, userId: currentPlayer!.userId })
     } catch (error) {
       toast({
         title: 'Some thing went wrong!',
@@ -51,7 +51,7 @@ function BetButtons() {
   const handleRaise = async () => {
     try {
       if (raiseValue) {
-        await raiseBet({ roomId: room.id, userId: currentPlayer.userId, raiseValue })
+        await raiseBet({ roomId: room.id, userId: currentPlayer!.userId, raiseValue })
       }
     } catch (error) {
       toast({
@@ -63,7 +63,7 @@ function BetButtons() {
 
   const handleFold = async () => {
     try {
-      await foldBet({ roomId: room.id, userId: currentPlayer.userId })
+      await foldBet({ roomId: room.id, userId: currentPlayer!.userId })
     } catch (error) {
       toast({
         title: 'Some thing went wrong!',
@@ -74,7 +74,7 @@ function BetButtons() {
 
   const handleAllIn = async () => {
     try {
-      await allInBet({ roomId: room.id, userId: currentPlayer.userId })
+      await allInBet({ roomId: room.id, userId: currentPlayer!.userId })
     } catch (error) {
       toast({
         title: 'Some thing went wrong!',
@@ -88,101 +88,102 @@ function BetButtons() {
       style={{ containerType: 'size' }}
       className='absolute left-1/2 top-[-2%] z-[2] flex w-2/3 -translate-x-1/2 flex-col items-center'
     >
-      <div className='relative mb-[12%] text-[4cqw] font-bold text-foreground'>
-        ${gameStore.pot}
-        <ChipStack posX={65} posY={230} amount={gameStore.pot} pot />
-      </div>
+      <div className='relative mb-[12%] text-[4cqw] font-bold text-foreground'>${gameStore.pot}</div>
 
-      <div className='flex w-full items-center justify-center gap-[2%]'>
-        {currentPlayer.bet < gameObj.callingValue &&
-          currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
+      <ChipStack posX={50} posY={0} amount={gameStore.pot} pot />
+
+      {currentPlayer && currentPlayer.userId === gameStore.playingUserId && (
+        <div className='z-[2] flex w-full items-center justify-center gap-[2%]'>
+          {currentPlayer.bet < gameObj.callingValue &&
+            currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
+              <button
+                className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
+                onClick={handleCall}
+              >
+                Call
+              </button>
+            )}
+
+          {currentPlayer.balance + currentPlayer.bet <= gameObj.callingValue && (
             <button
               className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-              onClick={handleCall}
+              onClick={handleAllIn}
             >
-              Call
+              All in
             </button>
           )}
 
-        {currentPlayer.balance + currentPlayer.bet <= gameObj.callingValue && (
-          <button
-            className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            onClick={handleAllIn}
-          >
-            All in
-          </button>
-        )}
+          {currentPlayer.bet === gameObj.callingValue && (
+            <button
+              className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
+              onClick={handleCheck}
+            >
+              Check
+            </button>
+          )}
 
-        {currentPlayer.bet === gameObj.callingValue && (
-          <button
-            className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            onClick={handleCheck}
-          >
-            Check
-          </button>
-        )}
+          {currentPlayer.bet < gameObj.callingValue && (
+            <button
+              className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
+              onClick={handleFold}
+            >
+              Fold
+            </button>
+          )}
 
-        {currentPlayer.bet < gameObj.callingValue && (
-          <button
-            className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'
-            onClick={handleFold}
-          >
-            Fold
-          </button>
-        )}
-
-        {currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
-          <Dialog>
-            <DialogTrigger className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'>
-              Raise
-            </DialogTrigger>
-            <DialogContent className='w-[400px]'>
-              <DialogHeader>
-                <DialogTitle className='mt-2'>Raise</DialogTitle>
-                <DialogDescription>
-                  <div className='flex items-center gap-1 font-medium'>
-                    Your balance: <div className='text-lg text-primary'>{currentPlayer?.balance || 0}$</div>
-                  </div>
-                  <div className='flex items-center gap-1 font-medium'>
-                    Need to pay extra:{' '}
-                    <div className='text-lg text-primary'>
-                      {gameObj.callingValue - currentPlayer.bet + (raiseValue || 0)}$
+          {currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
+            <Dialog>
+              <DialogTrigger className='rounded-sm bg-primary px-[2.5%] py-[1.5%] text-[2.5cqw] font-medium leading-none text-primary-foreground'>
+                Raise
+              </DialogTrigger>
+              <DialogContent className='w-[400px]'>
+                <DialogHeader>
+                  <DialogTitle className='mt-2'>Raise</DialogTitle>
+                  <DialogDescription>
+                    <div className='flex items-center gap-1 font-medium'>
+                      Your balance: <div className='text-lg text-primary'>{currentPlayer?.balance || 0}$</div>
                     </div>
-                  </div>
+                    <div className='flex items-center gap-1 font-medium'>
+                      Need to pay extra:{' '}
+                      <div className='text-lg text-primary'>
+                        {gameObj.callingValue - currentPlayer.bet + (raiseValue || 0)}$
+                      </div>
+                    </div>
 
-                  <Input
-                    onChange={(e) => {
-                      const value = Number(e.target.value)
-                      if (!isNaN(value)) {
-                        setRaiseValue(value)
-                      }
-                    }}
-                    value={raiseValue || ''}
-                    type='number'
-                    placeholder='Enter the raise value...'
-                    className='mt-2'
-                  />
+                    <Input
+                      onChange={(e) => {
+                        const value = Number(e.target.value)
+                        if (!isNaN(value)) {
+                          setRaiseValue(value)
+                        }
+                      }}
+                      value={raiseValue || ''}
+                      type='number'
+                      placeholder='Enter the raise value...'
+                      className='mt-2'
+                    />
 
-                  <div className='flex justify-end gap-3'>
-                    <DialogClose asChild>
-                      <Button className='mt-4' variant='secondary'>
-                        Cancel
+                    <div className='flex justify-end gap-3'>
+                      <DialogClose asChild>
+                        <Button className='mt-4' variant='secondary'>
+                          Cancel
+                        </Button>
+                      </DialogClose>
+                      <Button
+                        onClick={handleRaise}
+                        disabled={gameObj.callingValue - currentPlayer.bet + (raiseValue || 0) > currentPlayer.balance}
+                        className='mt-4'
+                      >
+                        Bet
                       </Button>
-                    </DialogClose>
-                    <Button
-                      onClick={handleRaise}
-                      disabled={gameObj.callingValue - currentPlayer.bet + (raiseValue || 0) > currentPlayer.balance}
-                      className='mt-4'
-                    >
-                      Bet
-                    </Button>
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+      )}
     </div>
   )
 }

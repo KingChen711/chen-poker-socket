@@ -33,7 +33,7 @@ function ShowdownScreen() {
   return (
     <div className='fixed inset-0 z-10 flex flex-col bg-black/50 font-merriweather font-black'>
       <div className='mt-[3%] flex items-center justify-center text-[3cqw] font-medium text-white'>
-        <p className='capitalize text-primary'>{winner?.user.username} Thắng!</p>
+        <p className='capitalize text-primary'>{winner?.user.username} Win!</p>
       </div>
       <div className='flex items-center justify-center text-[3cqw] font-medium italic text-primary'>
         {winner && CardRank.get(winner.hand.rank!)}
@@ -45,7 +45,7 @@ function ShowdownScreen() {
           size='lg'
           className='absolute bottom-[3%] right-[2%] h-[4.5%] w-[8%] text-[1cqw] font-bold'
         >
-          Tiếp tục
+          Continue
         </Button>
       )}
     </div>

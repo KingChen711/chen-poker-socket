@@ -33,7 +33,7 @@ function RoomButtons() {
       if (error?.message) {
         toast({
           variant: 'destructive',
-          title: error?.message
+          title: error?.message || 'Something went wrong!'
         })
       }
     }
@@ -45,15 +45,15 @@ function RoomButtons() {
 
   return (
     <div className='mt-2 flex justify-between gap-6'>
-      <div className='text-lg font-medium'>Mã phòng: {room.roomCode}</div>
+      <div className='text-lg font-medium'>Room code: {room.roomCode}</div>
       <div className='flex gap-3'>
         {room.roomOwner === gameStore.currentPlayer.userId && room.status === 'PRE_GAME' && (
           <Button disabled={isLeavingRoom} onClick={handleStartGame}>
-            Bắt đầu
+            Start Game
           </Button>
         )}
         <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
-          Rời phòng {isLeavingRoom && <Loader className='ml-1' />}
+          Leave Room {isLeavingRoom && <Loader className='ml-1' />}
         </Button>
       </div>
     </div>

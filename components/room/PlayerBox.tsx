@@ -1,5 +1,4 @@
 import { cn, getCardImage, isWinnerCard } from '@/lib/utils'
-import { useGameStore } from '@/store/game-store'
 import { Player } from '@/types'
 import Image from 'next/image'
 import React from 'react'
