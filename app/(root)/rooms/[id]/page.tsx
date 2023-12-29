@@ -114,14 +114,17 @@ function RoomDetailPage({ params }: Props) {
 
     socket.on('room-message', onRoomMessage)
 
-    if (currentPlayer) {
-      socket.emit('join-room', { roomId, username: currentPlayer?.user?.username })
-    }
-
     return () => {
       socket.off('room-message', onRoomMessage)
     }
-  }, [currentPlayer, roomId])
+  }, [])
+
+  // handle emit join room
+  useEffect(() => {
+    if (user) {
+      socket.emit('join-room', { roomId, username: user.username })
+    }
+  }, [roomId, user])
 
   // handle beforeunload
   useEffect(() => {

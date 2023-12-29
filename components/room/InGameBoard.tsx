@@ -36,7 +36,7 @@ function InGameBoard() {
             posY={y}
             isWinner={p.userId === gameStore.winner?.userId}
             isFolded={room!.gameObj!.foldPlayers.includes(p.userId)}
-            isShowdownStage={room?.status === 'SHOWDOWN'}
+            winner={gameStore.winner}
             showDealerIcon={p.userId === room!.gameObj!.dealer}
             showStand={p.userId === gameStore.playingUserId && !gameStore.winner}
             hiddenCard={p.userId !== gameStore.currentPlayer?.userId && !gameStore.winner}
