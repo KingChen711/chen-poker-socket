@@ -86,11 +86,11 @@ function BetButtons() {
   return (
     <div
       style={{ containerType: 'size' }}
-      className='absolute left-1/2 top-[-2%] flex w-2/3 -translate-x-1/2 flex-col items-center'
+      className='absolute left-1/2 top-[-2%] z-[2] flex w-2/3 -translate-x-1/2 flex-col items-center'
     >
       <div className='relative mb-[12%] text-[4cqw] font-bold text-foreground'>
         ${gameStore.pot}
-        <ChipStack posX={65} posY={230} amount={1611} pot />
+        <ChipStack posX={65} posY={230} amount={gameStore.pot} pot />
       </div>
 
       <div className='flex w-full items-center justify-center gap-[2%]'>
