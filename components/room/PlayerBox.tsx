@@ -28,6 +28,7 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
       )}
     >
       <div
+        // @ts-ignore
         style={{ containerType: 'size' }}
         className='absolute bottom-[57%] left-1/2 z-10 flex w-[75%] -translate-x-1/2 flex-col'
       >
@@ -40,6 +41,7 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
       </div>
 
       <div
+        // @ts-ignore
         style={{ containerType: 'size' }}
         className='absolute bottom-[11%] z-10 flex w-full items-center justify-center'
       >
@@ -50,6 +52,7 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
       </div>
 
       {isFolded ? (
+        // @ts-ignore
         <div style={{ containerType: 'size' }} className='absolute z-10 w-full'>
           <div className='flex justify-center text-[20cqw] font-medium'>Fold</div>
         </div>

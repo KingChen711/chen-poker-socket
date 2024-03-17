@@ -85,6 +85,7 @@ function BetButtons() {
 
   return (
     <div
+      // @ts-ignore
       style={{ containerType: 'size' }}
       className='absolute left-1/2 top-[-2%] z-[2] flex w-2/3 -translate-x-1/2 flex-col items-center'
     >
