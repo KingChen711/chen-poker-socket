@@ -2,7 +2,6 @@ import { CardImage } from '@/constants/deck'
 import { Card, Player } from '@/types'
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { getPlaiceholder } from 'plaiceholder'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
