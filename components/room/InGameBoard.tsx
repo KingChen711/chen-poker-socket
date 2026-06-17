@@ -4,6 +4,7 @@ import React from 'react'
 import TableImage from '@/public/assets/images/table.png'
 import PlayerBox from './PlayerBox'
 import ShowdownScreen from './ShowdownScreen'
+import GameOverScreen from './GameOverScreen'
 import BetButtons from './BetButtons'
 import { useGameStore } from '@/store/game-store'
 import ChipStack from './ChipStack'
@@ -21,6 +22,8 @@ function InGameBoard() {
       <Image alt='bg-auth' src={TableImage} className='absolute inset-0 -z-10' fill priority />
 
       <ShowdownScreen />
+
+      <GameOverScreen />
 
       <BetButtons />
 

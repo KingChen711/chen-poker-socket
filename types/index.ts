@@ -59,6 +59,7 @@ export type Player = {
   hand: Hand
   balance: number
   bet: number
+  seat: number
 }
 
 export type GameObj = {
@@ -74,6 +75,9 @@ export type GameObj = {
   checkingPlayers: string[]
   allInPlayers: string[]
   readyPlayers: string[]
+  actedPlayers: string[]
+  // deadline (ISO string) for the current turn / showdown ready phase; null when no timer is armed
+  turnEndsAt: string | null
   winner: string | null
 }
 
@@ -81,6 +85,8 @@ export type Room = {
   id: string
   roomCode: string
   roomOwner: string
+  // optimistic-concurrency token maintained by the server (kept in sync; not used directly by the UI)
+  version: number
   players: Player[]
 } & (
   | {
@@ -88,8 +94,9 @@ export type Room = {
       status: 'PRE_FLOP' | 'THE_FLOP' | 'THE_TURN' | 'THE_RIVER'
     }
   | {
+      // SHOWDOWN ends a hand; GAME_OVER is terminal (last player standing). Both carry the winner.
       gameObj: GameObj & { winner: string }
-      status: 'SHOWDOWN'
+      status: 'SHOWDOWN' | 'GAME_OVER'
     }
   | {
       gameObj: null

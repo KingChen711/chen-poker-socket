@@ -21,7 +21,7 @@ type Props = {
 
 function RoomDetailPage({ params }: Props) {
   const roomId = params.id
-  const { room, currentPlayer, players } = useGameStore()
+  const { room, players } = useGameStore()
   const [isLoading, setIsLoading] = useState(true)
   const user = useCurrentUser()
 
@@ -49,7 +49,7 @@ function RoomDetailPage({ params }: Props) {
 
   // handle playing user id
   useEffect(() => {
-    if (players.length === 0 || !room || room.status === 'PRE_GAME') {
+    if (players.length === 0 || !room || room.status === 'PRE_GAME' || room.status === 'GAME_OVER') {
       useGameStore.setState({ playingUserId: '' })
       return
     }
@@ -120,30 +120,19 @@ function RoomDetailPage({ params }: Props) {
   }, [])
 
   // handle emit join room
+  // Send clerkId so the server can identify this socket for disconnect/reconnection-grace cleanup,
+  // and so a fresh join (e.g. after a refresh) cancels a pending removal.
   useEffect(() => {
     if (user) {
-      socket.emit('join-room', { roomId, username: user.username })
+      socket.emit('join-room', { roomId, username: user.username, clerkId: user.clerkId })
     }
   }, [roomId, user])
 
-  // handle beforeunload
-  useEffect(() => {
-    const onBeforeunload = () => {
-      if (currentPlayer) {
-        socket.emit('leave-room', {
-          roomId,
-          username: currentPlayer.user.username,
-          clerkId: currentPlayer.user.clerkId
-        })
-      }
-    }
-
-    window.addEventListener('beforeunload', onBeforeunload)
-
-    return () => {
-      window.removeEventListener('beforeunload', onBeforeunload)
-    }
-  }, [currentPlayer, roomId])
+  // NOTE: we intentionally do NOT emit `leave-room` on `beforeunload`. That permanently deleted the
+  // player (forfeiting chips) on every refresh. The server now removes a player only after a
+  // reconnection-grace window on socket `disconnect`, so a refresh reconnects and keeps the seat;
+  // closing the tab disconnects and is cleaned up after the grace window. The explicit "Leave Room"
+  // button (RoomButtons) remains the deliberate exit.
 
   // handle loading screen
   useEffect(() => {

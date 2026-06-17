@@ -22,7 +22,8 @@ function BetButtons() {
   const currentPlayer = gameStore.currentPlayer
   const [raiseValue, setRaiseValue] = useState<number | null>(null)
 
-  if (room.status === 'SHOWDOWN') {
+  // No betting actions once the hand is at showdown or the table is over.
+  if (room.status === 'SHOWDOWN' || room.status === 'GAME_OVER') {
     return null
   }
 
