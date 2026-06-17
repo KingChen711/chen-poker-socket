@@ -88,7 +88,7 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
               alt='second card'
               className={cn(
                 'rounded-md absolute -rotate-12 z-10',
-                winner && isWinnerCard(winner, player.hand.holeCards[0]) && 'z-50'
+                winner && isWinnerCard(winner, player.hand.holeCards[1]) && 'z-50'
               )}
             />
           </div>

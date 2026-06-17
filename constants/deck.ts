@@ -1,75 +1,4 @@
-import { Card, CardSuit, CardValue, Rank } from '@/types'
-
-export const CardValueToBigInt = new Map<CardValue, bigint>([
-  [CardValue.Two, BigInt(2)],
-  [CardValue.Three, BigInt(3)],
-  [CardValue.Four, BigInt(4)],
-  [CardValue.Five, BigInt(5)],
-  [CardValue.Six, BigInt(6)],
-  [CardValue.Seven, BigInt(7)],
-  [CardValue.Eight, BigInt(8)],
-  [CardValue.Nine, BigInt(9)],
-  [CardValue.Ten, BigInt(10)],
-  [CardValue.Jack, BigInt(11)],
-  [CardValue.King, BigInt(12)],
-  [CardValue.Queen, BigInt(13)],
-  [CardValue.Ace, BigInt(14)]
-])
-
-export const deck: Card[] = [
-  { value: CardValue.Two, suit: CardSuit.Spade },
-  { value: CardValue.Two, suit: CardSuit.Club },
-  { value: CardValue.Two, suit: CardSuit.Diamond },
-  { value: CardValue.Two, suit: CardSuit.Heart },
-  { value: CardValue.Three, suit: CardSuit.Spade },
-  { value: CardValue.Three, suit: CardSuit.Club },
-  { value: CardValue.Three, suit: CardSuit.Diamond },
-  { value: CardValue.Three, suit: CardSuit.Heart },
-  { value: CardValue.Four, suit: CardSuit.Spade },
-  { value: CardValue.Four, suit: CardSuit.Club },
-  { value: CardValue.Four, suit: CardSuit.Diamond },
-  { value: CardValue.Four, suit: CardSuit.Heart },
-  { value: CardValue.Five, suit: CardSuit.Spade },
-  { value: CardValue.Five, suit: CardSuit.Club },
-  { value: CardValue.Five, suit: CardSuit.Diamond },
-  { value: CardValue.Five, suit: CardSuit.Heart },
-  { value: CardValue.Six, suit: CardSuit.Spade },
-  { value: CardValue.Six, suit: CardSuit.Club },
-  { value: CardValue.Six, suit: CardSuit.Diamond },
-  { value: CardValue.Six, suit: CardSuit.Heart },
-  { value: CardValue.Seven, suit: CardSuit.Spade },
-  { value: CardValue.Seven, suit: CardSuit.Club },
-  { value: CardValue.Seven, suit: CardSuit.Diamond },
-  { value: CardValue.Seven, suit: CardSuit.Heart },
-  { value: CardValue.Eight, suit: CardSuit.Spade },
-  { value: CardValue.Eight, suit: CardSuit.Club },
-  { value: CardValue.Eight, suit: CardSuit.Diamond },
-  { value: CardValue.Eight, suit: CardSuit.Heart },
-  { value: CardValue.Nine, suit: CardSuit.Spade },
-  { value: CardValue.Nine, suit: CardSuit.Club },
-  { value: CardValue.Nine, suit: CardSuit.Diamond },
-  { value: CardValue.Nine, suit: CardSuit.Heart },
-  { value: CardValue.Ten, suit: CardSuit.Spade },
-  { value: CardValue.Ten, suit: CardSuit.Club },
-  { value: CardValue.Ten, suit: CardSuit.Diamond },
-  { value: CardValue.Ten, suit: CardSuit.Heart },
-  { value: CardValue.Jack, suit: CardSuit.Spade },
-  { value: CardValue.Jack, suit: CardSuit.Club },
-  { value: CardValue.Jack, suit: CardSuit.Diamond },
-  { value: CardValue.Jack, suit: CardSuit.Heart },
-  { value: CardValue.Queen, suit: CardSuit.Spade },
-  { value: CardValue.Queen, suit: CardSuit.Club },
-  { value: CardValue.Queen, suit: CardSuit.Diamond },
-  { value: CardValue.Queen, suit: CardSuit.Heart },
-  { value: CardValue.King, suit: CardSuit.Spade },
-  { value: CardValue.King, suit: CardSuit.Club },
-  { value: CardValue.King, suit: CardSuit.Diamond },
-  { value: CardValue.King, suit: CardSuit.Heart },
-  { value: CardValue.Ace, suit: CardSuit.Spade },
-  { value: CardValue.Ace, suit: CardSuit.Club },
-  { value: CardValue.Ace, suit: CardSuit.Diamond },
-  { value: CardValue.Ace, suit: CardSuit.Heart }
-]
+import { CardSuit, CardValue, Rank } from '@/types'
 
 export const CardImage: Map<string, string> = new Map<string, string>([
   [JSON.stringify({ value: CardValue.Two, suit: CardSuit.Spade }), '/assets/cards/2-spades.jpg'],
@@ -143,7 +72,7 @@ export const CardRank: Map<Rank, string> = new Map([
   [Rank.FullHouse, 'Full House'],
   [Rank.FourOfKind, 'Four Of Kind'],
   [Rank.StraightFlush, 'Straight Flush'],
-  [Rank.RoyalFlush, 'Straight Flush']
+  [Rank.RoyalFlush, 'Royal Flush']
 ])
 
 export const denominationToChipImage: Map<string, string> = new Map<string, string>([
