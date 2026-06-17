@@ -114,7 +114,14 @@ Steps:
 
 ---
 
-## Phase 2 — UX tied to new backend behavior (🟠)
+## Phase 2 — UX tied to new backend behavior (🟠) ✅ DONE
+
+> Implemented and type-checked (0 TS errors in changed files). New `hooks/useCountdown.ts` and
+> `lib/action-error.ts`; `lib/_actions/game.ts` refactored to one helper that carries the server's
+> `message` + `statusCode`. **2.1** turn countdown in `BetButtons` (active player) and ready-deadline
+> countdown in `ShowdownScreen`. **2.2** raise dialog enforces positive-int / `≥ BigBlindValue` /
+> affordable with inline hints. **2.3** real backend error messages surfaced; `409` shown as a soft
+> "board changed — try again". **2.4** `pending` flag disables action buttons mid-request.
 
 ### 2.1 Turn countdown (the backend auto-acts after 60s)
 
