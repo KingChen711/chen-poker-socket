@@ -102,6 +102,13 @@ function BetButtons() {
             </div>
           )}
 
+          {currentPlayer.bet < gameObj.callingValue &&
+            currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (
+              <div className='mb-[2%] text-[2cqw] font-medium text-foreground'>
+                To call: ${gameObj.callingValue - currentPlayer.bet}
+              </div>
+            )}
+
           <div className='z-[2] flex w-full items-center justify-center gap-[2%]'>
             {currentPlayer.bet < gameObj.callingValue &&
               currentPlayer.balance + currentPlayer.bet > gameObj.callingValue && (

@@ -11,6 +11,8 @@ function RoomButtons() {
   const gameStore = useGameStore()
   const room = gameStore.room!
   const [isLeavingRoom, setIsLeavingRoom] = useState(false)
+  const [isStarting, setIsStarting] = useState(false)
+  const notEnoughPlayers = gameStore.players.length < 2
 
   const handleLeaveRoom = async () => {
     setIsLeavingRoom(true)
@@ -27,6 +29,7 @@ function RoomButtons() {
   }
 
   const handleStartGame = async () => {
+    setIsStarting(true)
     try {
       await startGame({ roomId: room!.id })
     } catch (error: any) {
@@ -36,6 +39,8 @@ function RoomButtons() {
           title: error?.message || 'Something went wrong!'
         })
       }
+    } finally {
+      setIsStarting(false)
     }
   }
 
@@ -48,9 +53,12 @@ function RoomButtons() {
       <div className='text-lg font-medium'>Room code: {room.roomCode}</div>
       <div className='flex gap-3'>
         {room.roomOwner === gameStore.currentPlayer.userId && room.status === 'PRE_GAME' && (
-          <Button disabled={isLeavingRoom} onClick={handleStartGame}>
-            Start Game
-          </Button>
+          <div className='flex items-center gap-2'>
+            {notEnoughPlayers && <span className='text-sm text-muted-foreground'>Need at least 2 players</span>}
+            <Button disabled={isLeavingRoom || isStarting || notEnoughPlayers} onClick={handleStartGame}>
+              Start Game {isStarting && <Loader className='ml-1' />}
+            </Button>
+          </div>
         )}
         <Button disabled={isLeavingRoom} onClick={handleLeaveRoom} variant='secondary'>
           Leave Room {isLeavingRoom && <Loader className='ml-1' />}

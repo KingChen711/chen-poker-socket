@@ -9,13 +9,30 @@ type Props = {
   posY: number
   isWinner: boolean
   isFolded: boolean
+  isAllIn: boolean
+  isChecked: boolean
   winner: Player | null
   showDealerIcon: boolean
   showStand: boolean
   hiddenCard: boolean
 }
 
-function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, winner, showStand, hiddenCard }: Props) {
+function PlayerBox({
+  player,
+  posX,
+  posY,
+  isWinner,
+  showDealerIcon,
+  isFolded,
+  isAllIn,
+  isChecked,
+  winner,
+  showStand,
+  hiddenCard
+}: Props) {
+  // Status badge above the player: all-in takes priority; otherwise "check" (cleared each round).
+  const statusBadge = isAllIn ? 'All in' : isChecked && !isFolded ? 'Check' : null
+
   return (
     <div
       style={{
@@ -27,6 +44,23 @@ function PlayerBox({ player, posX, posY, isWinner, showDealerIcon, isFolded, win
         isWinner && 'z-20'
       )}
     >
+      {statusBadge && (
+        <div
+          // @ts-ignore
+          style={{ containerType: 'size' }}
+          className='absolute left-1/2 top-[-2%] z-30 w-[44%] -translate-x-1/2'
+        >
+          <div
+            className={cn(
+              'rounded-full border-2 border-black text-center text-[20cqw] font-bold uppercase leading-tight',
+              isAllIn ? 'bg-destructive text-destructive-foreground' : 'bg-foreground text-background'
+            )}
+          >
+            {statusBadge}
+          </div>
+        </div>
+      )}
+
       <div
         // @ts-ignore
         style={{ containerType: 'size' }}

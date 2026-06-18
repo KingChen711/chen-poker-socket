@@ -180,7 +180,10 @@ requests / spurious conflict toasts from double-clicks.
 
 ---
 
-## Phase 3 — Standalone front-end bugs (🟡)
+## Phase 3 — Standalone front-end bugs (🟡) ✅ DONE
+
+> Verified complete. 3.1 `PlayerBox` second hole card now keys its winner highlight off
+> `holeCards[1]`. 3.2 `CardRank` maps `RoyalFlush → 'Royal Flush'`. Typecheck clean.
 
 ### 3.1 Winner highlight on the 2nd hole card checks the wrong card
 
@@ -205,7 +208,12 @@ showdown.
 
 ---
 
-## Phase 4 — Cleanup (⚪)
+## Phase 4 — Cleanup (⚪) ✅ DONE
+
+> Verified complete (deleted, not ported). The unused `lib/poker/*` mirror plus `CardValueToBigInt`,
+> the client `deck`, and `drawCard`/`shuffleDeck` are removed; no dangling references remain and the
+> empty `lib/poker` directory was cleaned up. Bonus: the dev toolchain that was pinned to `"latest"`
+> (TS→6 drift) is now on TypeScript 5.9.3, so a plain `tsc --noEmit` is clean.
 
 ### 4.1 The client `lib/poker/*` mirror is dead code with the bugs we just fixed server-side
 
@@ -228,23 +236,31 @@ Steps (pick one):
 
 ---
 
-## Phase 5 — UI/UX polish (🟡 / nice-to-have)
+## Phase 5 — UI/UX polish (🟡 / nice-to-have) ✅ DONE (with noted deferrals)
 
-- **Clearer turn indicator:** the active player's `showStand` ring is subtle; add a stronger highlight
-  - "Your turn" affordance, and an "amount to call" label near the buttons.
-- **Status badges:** show **All-in** and **Checked** badges on `PlayerBox` (folded already shows
-  "Fold"). Source from `gameObj.allInPlayers` / `actedPlayers`.
-- **Split-pot display:** the backend can pay multiple winners (ties/side pots) but only sends a single
-  headline `winner`. Showdown only announces one name; consider showing "Split pot" when more than one
-  player's balance increased, or ask the backend to expose a `winners[]` later. (Known limitation.)
-- **Pre-game lobby:** `PreGamePlayers` has no empty/instructional state; add "Waiting for players… share
-  room code {code}" and a min-2-players hint near **Start Game**.
-- **Copy/polish:** fix "Some thing went wrong!" → "Something went wrong", consistent button styling,
-  loading states on Leave/Start (Leave already has a loader).
-- **Heads-up:** verify the 2-player layout/positions read well now that heads-up is supported
-  server-side (`getPlayerPosition` with 2 players).
-- **"Play again":** `GAME_OVER` is terminal server-side (no reset endpoint). Either add a backend
-  reset later, or make the game-over screen route cleanly back to home/new room. (Product decision.)
+> Implemented and type-checked. Done:
+>
+> - ✅ **Amount-to-call** label in `BetButtons` (shows `To call: $X` on your turn when facing a bet),
+>   alongside the Phase-2 turn countdown; the `showStand` ring remains the active-player indicator.
+> - ✅ **Status badges** on `PlayerBox`: an **All in** pill (destructive color) and a **Check** pill,
+>   sourced from `gameObj.allInPlayers` / `gameObj.checkingPlayers` (folded already shows "Fold").
+>   Threaded through `InGameBoard`.
+> - ✅ **Pre-game lobby** (`PreGamePlayers`): "Waiting for players to join…", a "share room code {code}"
+>   line, and a live player count.
+> - ✅ **Start Game UX** (`RoomButtons`): disabled with a "Need at least 2 players" hint until ≥2
+>   players, plus a loading spinner while starting.
+> - ✅ **Copy**: the "Some thing went wrong!" typos are already gone (Phase 2 replaced action toasts
+>   with `describeActionError`).
+>
+> Deferred / not code-changed:
+>
+> - **Split-pot announcement** — needs the backend to emit `winners[]`; today only a single headline
+>   `winner` is sent, and detecting a chop client-side would be a fragile balance-diff heuristic. Left
+>   for a backend follow-up.
+> - **Heads-up layout** — `getPlayerPosition` already lays out 2 players (+1 button slot); this is a
+>   visual-only check best done by running the app, no code change made.
+> - **"Play again"** — already handled: `GameOverScreen` (Phase 1.3) routes cleanly home via "Back
+>   home". A true rematch still needs a backend reset endpoint (clear `gameObj` → `PRE_GAME`).
 
 ---
 
