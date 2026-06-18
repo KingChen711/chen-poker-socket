@@ -64,6 +64,7 @@ export type Player = {
 
 export type GameObj = {
   dealerIndex: number
+  dealerSeat: number
   turn: number
   callingValue: number
   deck: Card[]
